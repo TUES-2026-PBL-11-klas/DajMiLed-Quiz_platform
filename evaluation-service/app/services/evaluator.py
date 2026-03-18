@@ -21,26 +21,31 @@ class SemanticEvaluator(BaseEvaluator):
     def evaluate(self, request: EvaluationRequest) -> EvaluationResponse:
         sentences = self._split_into_sentences(request.context)
         
-        max_similarity = 0.0
-        best_match_sentence = ""
-        
+        # 1. Preprocess & Use Question: Find context relevance
+        # We look for the sentence(s) in the context that most likely answer the question
+        relevance_scores = []
         for sentence in sentences:
-            if self._is_keyword_match(request.answer, sentence):
-                similarity = 0.9
-            else:
-                similarity = get_similarity(request.answer, sentence)
-                
-            if similarity > max_similarity:
-                max_similarity = similarity
-                best_match_sentence = sentence
+            relevance = get_similarity(request.question, sentence)
+            relevance_scores.append((relevance, sentence))
+            
+        # Get the most relevant sentence based on the question
+        relevance_scores.sort(key=lambda x: x[0], reverse=True)
+        top_relevant_sentence = relevance_scores[0][1] if relevance_scores else ""
+        
+        # 2. Evaluate Answer: Check similarity to the most relevant part of the context
+        # We combine the most relevant sentence with the student's answer for validation
+        if self._is_keyword_match(request.answer, top_relevant_sentence):
+            max_similarity = 0.9
+        else:
+            max_similarity = get_similarity(request.answer, top_relevant_sentence)
                 
         is_correct = max_similarity > self.threshold
         score = round(max_similarity, 2)
         
         if is_correct:
-            feedback = f"Correct! Your answer aligns with the context. Best match: '{best_match_sentence.strip()}'"
+            feedback = f"Correct! Your answer aligns with the relevant context: '{top_relevant_sentence.strip()}'"
         else:
-            feedback = f"Incorrect. Your answer does not seem to match the context well. Similarity score: {score}"
+            feedback = f"Incorrect. Your answer does not seem to match the relevant fact. Similarity score: {score}"
             
         return EvaluationResponse(
             score=score,
