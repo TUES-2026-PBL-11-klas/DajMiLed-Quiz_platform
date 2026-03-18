@@ -38,19 +38,19 @@ TEST_CASES = [
     {
         "context": CONTEXT_PYTHON,
         "question": "What does Python emphasize in its design philosophy?",
-        "answer": "code readability",
+        "answer": "Code Readability",
         "expected_correct": True
     },
     {
         "context": CONTEXT_PYTHON,
         "question": "Does Python use significant indentation?",
-        "answer": "Yes",
-        "expected_correct": True
+        "answer": "No",
+        "expected_correct": False
     },
     {
         "context": CONTEXT_PYTHON,
         "question": "What kind of programming paradigms does Python support?",
-        "answer": "object-oriented, functional, and structured programming",
+        "answer": "OOP, functional, structured",
         "expected_correct": True
     },
     {
@@ -68,7 +68,7 @@ TEST_CASES = [
     {
         "context": CONTEXT_APOLLO,
         "question": "Where did they land?",
-        "answer": "In the middle of the desert",
+        "answer": "Middle",
         "expected_correct": False
     },
     {
