@@ -18,34 +18,58 @@ class SemanticEvaluator(BaseEvaluator):
         sentence_clean = sentence.strip().lower()
         return answer_clean in sentence_clean and len(answer_clean) > 2
 
+    def _is_affirmation(self, answer: str) -> bool:
+        tokens = {"yes", "yeah", "yep", "it is", "correct", "true", "indeed"}
+        return any(t in answer.lower() for t in tokens)
+
+    def _is_denial(self, answer: str) -> bool:
+        tokens = {"no", "nope", "not really", "false", "wrong", "incorrect", "is not"}
+        return any(t in answer.lower() for t in tokens)
+
     def evaluate(self, request: EvaluationRequest) -> EvaluationResponse:
         sentences = self._split_into_sentences(request.context)
         
-        # 1. Preprocess & Use Question: Find context relevance
-        # We look for the sentence(s) in the context that most likely answer the question
         relevance_scores = []
         for sentence in sentences:
             relevance = get_similarity(request.question, sentence)
             relevance_scores.append((relevance, sentence))
             
-        # Get the most relevant sentence based on the question
         relevance_scores.sort(key=lambda x: x[0], reverse=True)
-        top_relevant_sentence = relevance_scores[0][1] if relevance_scores else ""
         
-        # 2. Evaluate Answer: Check similarity to the most relevant part of the context
-        # We combine the most relevant sentence with the student's answer for validation
-        if self._is_keyword_match(request.answer, top_relevant_sentence):
-            max_similarity = 0.9
-        else:
-            max_similarity = get_similarity(request.answer, top_relevant_sentence)
+        top_n = relevance_scores[:3]  
+        
+        max_overall_similarity = 0.0
+        best_match_sentence = ""
+        
+        is_binary = self._is_affirmation(request.answer) or self._is_denial(request.answer)
+        
+        for rel_score, sentence in top_n:
+            if is_binary:
+                if self._is_affirmation(request.answer):
+                    similarity = rel_score 
+                else: 
+                    similarity = 1.0 - rel_score 
+            else:
+                if self._is_keyword_match(request.answer, sentence):
+                    similarity = 0.95
+                else:
+                    similarity = get_similarity(request.answer, sentence)
+            
+            if similarity > max_overall_similarity:
+                max_overall_similarity = similarity
+                best_match_sentence = sentence
                 
-        is_correct = max_similarity > self.threshold
-        score = round(max_similarity, 2)
+        if is_binary and max_overall_similarity < 0.3:
+             pass
+                
+        is_correct = max_overall_similarity > self.threshold
+        score = round(max_overall_similarity, 2)
         
         if is_correct:
-            feedback = f"Correct! Your answer aligns with the relevant context: '{top_relevant_sentence.strip()}'"
+            feedback = f"Correct! Your answer aligns with the relevant context: '{best_match_sentence.strip()}'"
         else:
-            feedback = f"Incorrect. Your answer does not seem to match the relevant fact. Similarity score: {score}"
+            suggestion = f" Most relevant fact found: '{best_match_sentence.strip()}'" if best_match_sentence else ""
+            feedback = f"Incorrect. Your answer does not seem to match the relevant fact. Similarity score: {score}.{suggestion}"
             
         return EvaluationResponse(
             score=score,

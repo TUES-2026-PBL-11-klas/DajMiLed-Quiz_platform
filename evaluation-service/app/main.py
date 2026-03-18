@@ -8,7 +8,7 @@ app = FastAPI(
     version="0.1.0",
 )
 
-evaluator = SemanticEvaluator(threshold=0.65)
+evaluator = SemanticEvaluator(threshold=0.55)
 
 @app.get("/")
 async def root():
