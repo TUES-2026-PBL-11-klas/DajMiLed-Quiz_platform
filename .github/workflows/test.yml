@@ -1,7 +1,7 @@
 name: Tests & Static Analysis
 
 on:
-  workflow_dispatch:
+  workflow_call:
 
 jobs:
   test-and-scan:
@@ -20,7 +20,6 @@ jobs:
           cache: maven
 
       - name: Run mvn clean verify
-        working-directory: server
         run: mvn clean verify --batch-mode --no-transfer-progress
 
       - name: Upload SpotBugs report
