@@ -1,0 +1,23 @@
+name: CI/CD
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    uses: ./.github/workflows/test.yml
+
+  docker:
+    needs: test
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    uses: ./.github/workflows/build-and-push.yml
+    with:
+      image-name: quiz-server
+      tag: ${{ github.sha }}
+      vault-url: http://localhost:8200
+      vault-role: github-actions
+      vault-secret-path: secret/data/docker
