@@ -10,6 +10,10 @@ on:
         required: false
         type: string
         default: ${{ github.sha }}
+      context:
+        required: false
+        type: string
+        default: .
     secrets:
       DOCKERHUB_USERNAME:
         required: true
@@ -41,7 +45,7 @@ jobs:
       - name: Build and Push
         uses: docker/build-push-action@v6
         with:
-          context: .
+          context: ${{ inputs.context }}
           platforms: linux/amd64,linux/arm64
           push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/${{ inputs.image-name }}:${{ inputs.tag }}

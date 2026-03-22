@@ -24,3 +24,4 @@ jobs:
     with:
       image-name: quiz-server
       tag: ${{ github.sha }}
+      context: ./server
