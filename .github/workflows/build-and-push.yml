@@ -10,38 +10,21 @@ on:
         required: false
         type: string
         default: ${{ github.sha }}
-      vault-url:
+    secrets:
+      DOCKERHUB_USERNAME:
         required: true
-        type: string
-      vault-role:
+      DOCKERHUB_TOKEN:
         required: true
-        type: string
-      vault-secret-path:
-        required: false
-        type: string
-        default: secret/data/docker
 
 jobs:
   build-and-push:
     runs-on: ubuntu-latest
     permissions:
-      id-token: write
       contents: read
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-
-      - name: Import Secrets from Vault
-        uses: hashicorp/vault-action@v3
-        id: vault
-        with:
-          url: ${{ inputs.vault-url }}
-          method: jwt
-          role: ${{ inputs.vault-role }}
-          secrets: |
-            ${{ inputs.vault-secret-path }} username | DOCKERHUB_USERNAME ;
-            ${{ inputs.vault-secret-path }} token | DOCKERHUB_TOKEN
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
@@ -52,8 +35,8 @@ jobs:
       - name: Login to DockerHub
         uses: docker/login-action@v3
         with:
-          username: ${{ steps.vault.outputs.DOCKERHUB_USERNAME }}
-          password: ${{ steps.vault.outputs.DOCKERHUB_TOKEN }}
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Build and Push
         uses: docker/build-push-action@v6
@@ -61,6 +44,6 @@ jobs:
           context: .
           platforms: linux/amd64,linux/arm64
           push: true
-          tags: ${{ steps.vault.outputs.DOCKERHUB_USERNAME }}/${{ inputs.image-name }}:${{ inputs.tag }}
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/${{ inputs.image-name }}:${{ inputs.tag }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
