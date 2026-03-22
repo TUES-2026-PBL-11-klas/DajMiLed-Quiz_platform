@@ -1,7 +1,6 @@
 name: Tests & Static Analysis
 
 on:
-  workflow_call:
   workflow_dispatch:
 
 jobs:
