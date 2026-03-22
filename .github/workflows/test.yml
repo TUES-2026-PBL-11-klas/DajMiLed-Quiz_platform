@@ -6,6 +6,7 @@ on:
 jobs:
   test-and-scan:
     name: mvn clean verify (Java 21)
+    working-directory: server
     runs-on: ubuntu-latest
 
     steps:
