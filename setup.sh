@@ -34,7 +34,9 @@ sleep 3
 echo "[2/3] Creating vault-auth secret..."
 kubectl create secret generic vault-auth \
   --from-literal=VAULT_TOKEN="${VAULT_TOKEN}" \
-  --dry-run=client -o yaml | kubectl apply -f -
+  --namespace default \
+  2>/dev/null || kubectl patch secret vault-auth \
+  -p "{\"stringData\":{\"VAULT_TOKEN\":\"${VAULT_TOKEN}\"}}"
 
 # ── Apply Helm chart ──────────────────────────────────────────────────────────
 echo "[3/3] Applying Helm chart..."
