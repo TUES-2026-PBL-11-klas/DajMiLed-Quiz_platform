@@ -5,3 +5,6 @@ pydantic
 sentence-transformers
 torch
 requests
+pytest
+pytest-asyncio
+httpx
