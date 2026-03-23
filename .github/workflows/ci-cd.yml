@@ -37,10 +37,11 @@ jobs:
     permissions:
       contents: write
     steps:
-      - name: Checkout
+      - name: Checkout gitops branch
         uses: actions/checkout@v4
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
+          ref: gitops
 
       - name: Update image tag in values.yaml
         run: |
@@ -52,4 +53,4 @@ jobs:
           git config user.email "github-actions@github.com"
           git add helm/values.yaml
           git commit -m "chore: update quiz-server image tag to ${{ github.sha }}"
-          git push
+          git push origin gitops
