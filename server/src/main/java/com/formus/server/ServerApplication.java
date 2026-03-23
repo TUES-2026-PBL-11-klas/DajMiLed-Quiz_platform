@@ -11,4 +11,3 @@ public class ServerApplication {
 	}
 
 }
-// test commit for the ci-cd test
