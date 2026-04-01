@@ -2,7 +2,9 @@ package com.formus.server.dtos;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
+import lombok.Setter;
 
+@Setter
 @Getter
 public class LoginRequest {
     @NotBlank
