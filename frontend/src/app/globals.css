@@ -18,6 +18,7 @@
   --on-primary: #ffffff;
   --on-primary-container: #7a432c;
   --primary-fixed: #ffdbce;
+  --primary-fixed-dim: #ffb599;
 
   --secondary: #436558;
   --secondary-container: #c2e8d7;
@@ -29,6 +30,7 @@
   --tertiary-container: #e1c088;
   --on-tertiary: #ffffff;
   --on-tertiary-container: #654d20;
+  --tertiary-fixed: #ffdea8;
 
   --error: #ba1a1a;
   --error-container: #ffdad6;
@@ -54,6 +56,7 @@
   --color-on-primary: var(--on-primary);
   --color-on-primary-container: var(--on-primary-container);
   --color-primary-fixed: var(--primary-fixed);
+  --color-primary-fixed-dim: var(--primary-fixed-dim);
 
   --color-secondary: var(--secondary);
   --color-secondary-container: var(--secondary-container);
@@ -65,6 +68,7 @@
   --color-tertiary-container: var(--tertiary-container);
   --color-on-tertiary: var(--on-tertiary);
   --color-on-tertiary-container: var(--on-tertiary-container);
+  --color-tertiary-fixed: var(--tertiary-fixed);
 
   --color-error: var(--error);
   --color-error-container: var(--error-container);
@@ -82,10 +86,21 @@ body {
   overflow-x: hidden;
 }
 
-.glass-overlay {
+.glass-overlay,
+.glass-panel {
   background: rgba(255, 255, 255, 0.7);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
+}
+
+.bg-scholarly-texture {
+  background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDdsYucwM0Znm0TMBSgBS4VHmO3u26-9Hi0vRrBatkgknSCUUQ3GulNe4x7YAyPgGo3N6BPIsVgJnX7ug70Un2r6NytijVr0zqsIdyfrMMTbHitJZngQMQu-xhst-Xo0rmESDNTlBs52N0UTlT9OcPeYteeKdIR377jARouohnXoQdoaZ4h9Dk0lKFOZgCmfoiwf5mD9Fa2JQi-4oQEa1ytvkn2t6IwSnhUrw1VBozp3In1VMga-X5GAPcKXz9zXd7dTHXVLbU0Y8IL");
+  background-size: cover;
+  background-position: center;
+}
+
+.primary-gradient {
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-container) 100%);
 }
 
 .ambient-shadow {
