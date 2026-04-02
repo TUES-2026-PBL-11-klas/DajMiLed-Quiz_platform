@@ -13,10 +13,10 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import com.formus.server.repositories.UserRepository;
 import com.formus.server.jwt.JwtAuthenticationFilter;
@@ -39,22 +39,22 @@ public class AuthControllerTest {
     @Autowired
     private ObjectMapper objectMapper;
 
-    @MockitoBean
+    @MockBean
     private AuthService authService;
 
-    @MockitoBean
+    @MockBean
     private JwtProvider jwtProvider;
 
-    @MockitoBean
+    @MockBean
     private PasswordEncoder passwordEncoder;
 
-    @MockitoBean
+    @MockBean
     private UserDetailsService userDetailsService;
 
-    @MockitoBean
+    @MockBean
     private JwtAuthenticationFilter jwtAuthenticationFilter;
 
-    @MockitoBean
+    @MockBean
     private UserRepository userRepository;
 
     private RegisterRequest registerRequest;
