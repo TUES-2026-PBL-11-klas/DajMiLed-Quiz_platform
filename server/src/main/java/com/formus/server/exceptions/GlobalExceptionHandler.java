@@ -9,6 +9,16 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
+
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public ResponseEntity<ApiResponse> handleResourceNotFound(ResourceNotFoundException ex) {
+        ApiResponse response = new ApiResponse(
+                HttpStatus.NOT_FOUND.value(),
+                ex.getMessage(),
+                null);
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+    }
+
     @ExceptionHandler(EmailAlreadyExistsException.class)
     public ResponseEntity<ApiResponse> handleEmailExists(EmailAlreadyExistsException ex) {
         ApiResponse response = new ApiResponse(
