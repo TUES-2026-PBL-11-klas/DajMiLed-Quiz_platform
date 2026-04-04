@@ -1,4 +1,4 @@
-package com.formus.server.dtos;
+package com.formus.server.dtos.forms;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;

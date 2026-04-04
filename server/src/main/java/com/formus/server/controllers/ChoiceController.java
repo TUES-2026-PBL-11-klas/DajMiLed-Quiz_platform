@@ -1,7 +1,7 @@
 package com.formus.server.controllers;
 
 import com.formus.server.dtos.ApiResponse;
-import com.formus.server.dtos.CreateChoiceRequest;
+import com.formus.server.dtos.choices.CreateChoiceRequest;
 import com.formus.server.models.Choice;
 import com.formus.server.services.choice.ChoiceService;
 import jakarta.validation.Valid;

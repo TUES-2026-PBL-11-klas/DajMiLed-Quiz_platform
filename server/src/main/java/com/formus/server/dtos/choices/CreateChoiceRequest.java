@@ -1,4 +1,4 @@
-package com.formus.server.dtos;
+package com.formus.server.dtos.choices;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;

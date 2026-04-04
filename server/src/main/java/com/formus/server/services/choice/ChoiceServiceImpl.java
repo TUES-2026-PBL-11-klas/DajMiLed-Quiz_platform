@@ -1,6 +1,6 @@
 package com.formus.server.services.choice;
 
-import com.formus.server.dtos.CreateChoiceRequest;
+import com.formus.server.dtos.choices.CreateChoiceRequest;
 import com.formus.server.exceptions.ResourceNotFoundException;
 import com.formus.server.models.Choice;
 import com.formus.server.models.Question;

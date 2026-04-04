@@ -1,7 +1,7 @@
 package com.formus.server.controllers;
 
 import com.formus.server.dtos.ApiResponse;
-import com.formus.server.dtos.CreateQuestionRequest;
+import com.formus.server.dtos.questions.CreateQuestionRequest;
 import com.formus.server.models.Question;
 import com.formus.server.services.question.QuestionService;
 import jakarta.validation.Valid;

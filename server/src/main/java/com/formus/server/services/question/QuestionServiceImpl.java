@@ -1,6 +1,6 @@
 package com.formus.server.services.question;
 
-import com.formus.server.dtos.CreateQuestionRequest;
+import com.formus.server.dtos.questions.CreateQuestionRequest;
 import com.formus.server.exceptions.ResourceNotFoundException;
 import com.formus.server.models.Form;
 import com.formus.server.models.Question;
