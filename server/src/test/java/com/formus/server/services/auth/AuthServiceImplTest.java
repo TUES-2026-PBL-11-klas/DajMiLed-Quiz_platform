@@ -64,7 +64,7 @@ public class AuthServiceImplTest {
         when(userRepository.existsByUsername(anyString())).thenReturn(false);
         when(passwordEncoder.encode(anyString())).thenReturn("encodedPassword");
         when(userRepository.save(any(User.class))).thenReturn(testUser);
-        when(jwtProvider.generateToken(anyString(), anyString())).thenReturn("mockToken");
+        when(jwtProvider.generateToken(anyString(), anyLong())).thenReturn("mockToken");
 
         AuthResponse response = authService.register(registerRequest);
 
@@ -73,7 +73,7 @@ public class AuthServiceImplTest {
         assertEquals("User registered and authenticated successfully", response.getMessage());
         
         verify(userRepository, times(1)).save(any(User.class));
-        verify(jwtProvider, times(1)).generateToken("testuser", "test@test.com");
+        verify(jwtProvider, times(1)).generateToken("testuser", 1L);
     }
 
     @Test
@@ -97,7 +97,7 @@ public class AuthServiceImplTest {
     void login_withValidUsername_returnsToken() {
         when(userRepository.findByUsername("testuser")).thenReturn(Optional.of(testUser));
         when(passwordEncoder.matches("password123", "encodedPassword")).thenReturn(true);
-        when(jwtProvider.generateToken("testuser", "test@test.com")).thenReturn("mockToken");
+        when(jwtProvider.generateToken("testuser", 1L)).thenReturn("mockToken");
         AuthResponse response = authService.login(loginRequest);
         assertNotNull(response);
         assertEquals("mockToken", response.getToken());
@@ -113,7 +113,7 @@ public class AuthServiceImplTest {
         when(userRepository.findByUsername("test@test.com")).thenReturn(Optional.empty());
         when(userRepository.findByEmail("test@test.com")).thenReturn(Optional.of(testUser));
         when(passwordEncoder.matches("password123", "encodedPassword")).thenReturn(true);
-        when(jwtProvider.generateToken("testuser", "test@test.com")).thenReturn("mockToken");
+        when(jwtProvider.generateToken("testuser", 1L)).thenReturn("mockToken");
 
         AuthResponse response = authService.login(emailLoginRequest);
 

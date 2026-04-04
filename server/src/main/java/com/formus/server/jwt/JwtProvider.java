@@ -29,13 +29,13 @@ public class JwtProvider {
         key = Keys.hmacShaKeyFor(jwtSecret.getBytes(StandardCharsets.UTF_8));
     }
 
-    public String generateToken(String username, String email) {
+    public String generateToken(String username, Long id) {
         Date now = new Date();
         Date expiryDate = new Date(now.getTime() + expirationMs);
 
         return Jwts.builder()
                 .setSubject(username)
-                .claim("email", email)
+                .claim("id", id)
                 .setIssuedAt(now)
                 .setExpiration(expiryDate)
                 .signWith(key)
@@ -64,6 +64,18 @@ public class JwtProvider {
                     .build()
                     .parseClaimsJws(token);
             return claimsJws.getBody().getSubject();
+        } catch (JwtException | IllegalArgumentException ex) {
+            return null;
+        }
+    }
+
+    public Long getIdFromToken(String token) {
+        try {
+            Jws<Claims> claimsJws = Jwts.parserBuilder()
+                    .setSigningKey(key)
+                    .build()
+                    .parseClaimsJws(token);
+            return claimsJws.getBody().get("id", Long.class);
         } catch (JwtException | IllegalArgumentException ex) {
             return null;
         }
