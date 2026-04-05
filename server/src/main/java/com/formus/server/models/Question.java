@@ -16,7 +16,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 @Entity
 @Table(name = "questions")
@@ -30,6 +33,7 @@ public class Question {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "form_id", nullable = false)
+    @SuppressFBWarnings(value = { "EI_EXPOSE_REP" }, justification = "Required by JPA")
     private Form form;
 
     @Column(nullable = false)
@@ -45,5 +49,17 @@ public class Question {
         this.form = form;
         this.text = text;
         this.type = type;
+    }
+
+    public void setForm(Form form) {
+        this.form = form;
+    }
+
+    public void addChoice(Choice choice) {
+        choices.add(choice);
+    }
+
+    public List<Choice> getChoices() {
+        return Collections.unmodifiableList(choices);
     }
 }

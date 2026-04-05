@@ -1,5 +1,6 @@
 package com.formus.server.models;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -25,6 +26,7 @@ public class Choice {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "question_id", nullable = false)
+    @SuppressFBWarnings(value = { "EI_EXPOSE_REP" }, justification = "Required by JPA")
     private Question question;
 
     @Column(nullable = false)
@@ -33,5 +35,9 @@ public class Choice {
     public Choice(Question question, String text) {
         this.question = question;
         this.text = text;
+    }
+
+    public void setQuestion(Question question) {
+        this.question = question;
     }
 }

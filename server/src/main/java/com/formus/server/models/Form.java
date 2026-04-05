@@ -13,6 +13,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Entity
@@ -37,5 +38,14 @@ public class Form {
     public Form(String title, Long createdBy) {
         this.title = title;
         this.createdBy = createdBy;
+    }
+
+    public List<Question> getQuestions() {
+        return Collections.unmodifiableList(questions);
+    }
+
+    public void addQuestion(Question question) {
+        questions.add(question);
+        question.setForm(this);
     }
 }

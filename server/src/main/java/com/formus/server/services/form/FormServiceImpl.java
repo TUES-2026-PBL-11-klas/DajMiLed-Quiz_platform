@@ -50,7 +50,7 @@ public class FormServiceImpl implements FormService {
         for (Question question : form.getQuestions()) {
             List<ChoiceResponse> choiceResponses = new ArrayList<>();
 
-            if (question.getChoices() != null && !question.getChoices().isEmpty()) {
+            if (!question.getChoices().isEmpty()) {
                 for (Choice choice : question.getChoices()) {
                     choiceResponses.add(new ChoiceResponse(choice.getId(), choice.getText()));
                 }

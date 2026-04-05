@@ -34,7 +34,7 @@ public class AuthServiceImpl implements AuthService {
         String encodedPassword = passwordEncoder.encode(request.getPassword());
 
         User user = new User(request.getUsername(), request.getEmail(), encodedPassword);
-        userRepository.save(user);
+        user = userRepository.save(user);
 
         String token = jwtProvider.generateToken(user.getUsername(), user.getId());
         return new AuthResponse(token, "User registered and authenticated successfully");

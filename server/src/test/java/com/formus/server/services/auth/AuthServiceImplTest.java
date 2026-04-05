@@ -55,6 +55,7 @@ public class AuthServiceImplTest {
         ReflectionTestUtils.setField(loginRequest, "password", "password123");
 
         testUser = new User("testuser", "test@test.com", "encodedPassword");
+        ReflectionTestUtils.setField(testUser, "id", 1L);
     }
 
     @Test
