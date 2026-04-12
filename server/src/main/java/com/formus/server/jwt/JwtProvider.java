@@ -1,12 +1,14 @@
 package com.formus.server.jwt;
 
 import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+
+import com.formus.server.exceptions.InvalidJwtException;
+
 import io.jsonwebtoken.JwtException;
 
 import javax.crypto.SecretKey;
@@ -42,49 +44,43 @@ public class JwtProvider {
                 .compact();
     }
 
-    public boolean validateToken(String token) {
+    public Claims parseToken(String token) {
         if (token == null || token.isBlank()) {
-            return false;
+            throw new InvalidJwtException("JWT token is missing");
         }
+
         try {
-            Jwts.parserBuilder()
+            return Jwts.parserBuilder()
                     .setSigningKey(key)
                     .build()
-                    .parseClaimsJws(token);
+                    .parseClaimsJws(token)
+                    .getBody();
+        } catch (JwtException | IllegalArgumentException ex) {
+            throw new InvalidJwtException("Invalid JWT token", ex);
+        }
+    }
+
+    public boolean validateToken(String token) {
+        try {
+            parseToken(token);
             return true;
-        } catch (Exception ex) {
+        } catch (InvalidJwtException ex) {
             return false;
         }
     }
 
     public String getUsernameFromToken(String token) {
-        try {
-            Jws<Claims> claimsJws = Jwts.parserBuilder()
-                    .setSigningKey(key)
-                    .build()
-                    .parseClaimsJws(token);
-            return claimsJws.getBody().getSubject();
-        } catch (JwtException | IllegalArgumentException ex) {
-            return null;
-        }
+        return parseToken(token).getSubject();
     }
 
     public Long getIdFromToken(String token) {
-        try {
-            Jws<Claims> claimsJws = Jwts.parserBuilder()
-                    .setSigningKey(key)
-                    .build()
-                    .parseClaimsJws(token);
-            return claimsJws.getBody().get("id", Long.class);
-        } catch (JwtException | IllegalArgumentException ex) {
-            return null;
-        }
+        return parseToken(token).get("id", Long.class);
     }
 
     public String extractTokenFromHeader(String authorizationHeader) {
-        if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
-            return authorizationHeader.substring(7);
+        if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
+            throw new InvalidJwtException("Missing or invalid Authorization header");
         }
-        return null;
+        return authorizationHeader.substring(7);
     }
 }

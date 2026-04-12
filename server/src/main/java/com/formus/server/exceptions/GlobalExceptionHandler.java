@@ -57,6 +57,15 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
     }
 
+    @ExceptionHandler(InvalidJwtException.class)
+    public ResponseEntity<ApiResponse> handleInvalidJwt(InvalidJwtException ex) {
+        ApiResponse response = new ApiResponse(
+                HttpStatus.UNAUTHORIZED.value(),
+                ex.getMessage(),
+                null);
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
+    }
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ApiResponse> handleGenericException(Exception ex) {
         log.error("Unexpected error", ex);
