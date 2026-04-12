@@ -45,7 +45,8 @@ public class FormServiceImpl implements FormService {
     @Override
     @Transactional(readOnly = true)
     public FullFormResponse getForm(Long id) {
-        Form form = formRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Form not found"));
+        Form form = formRepository.findByIdWithQuestions(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Form not found"));
         List<QuestionResponse> questionResponses = new ArrayList<>();
         for (Question question : form.getQuestions()) {
             List<ChoiceResponse> choiceResponses = new ArrayList<>();
@@ -63,7 +64,7 @@ public class FormServiceImpl implements FormService {
                             question.getType(),
                             choiceResponses));
         }
-        
+
         return new FullFormResponse(
                 form.getId(),
                 form.getTitle(),

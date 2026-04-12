@@ -105,7 +105,7 @@ class FormServiceImplTest {
         ReflectionTestUtils.setField(choice, "id", 100L);
         question.addChoice(choice);
 
-        when(formRepository.findById(1L)).thenReturn(Optional.of(form));
+        when(formRepository.findByIdWithQuestions(1L)).thenReturn(Optional.of(form));
 
         FullFormResponse response = formService.getForm(1L);
 
@@ -118,10 +118,10 @@ class FormServiceImplTest {
 
     @Test
     void getForm_notFound_throws() {
-        when(formRepository.findById(1L)).thenReturn(Optional.empty());
+        when(formRepository.findByIdWithQuestions(1L)).thenReturn(Optional.empty());
 
         assertThrows(ResourceNotFoundException.class,
                 () -> formService.getForm(1L));
-        verify(formRepository).findById(1L);
+        verify(formRepository).findByIdWithQuestions(1L);
     }
 }
