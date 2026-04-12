@@ -13,6 +13,7 @@ import com.formus.server.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -22,6 +23,7 @@ public class AuthServiceImpl implements AuthService {
     private final JwtProvider jwtProvider;
 
     @Override
+    @Transactional
     public AuthResponse register(RegisterRequest request) {
         if (userRepository.existsByEmail(request.getEmail())) {
             throw new EmailAlreadyExistsException(request.getEmail());
@@ -34,13 +36,14 @@ public class AuthServiceImpl implements AuthService {
         String encodedPassword = passwordEncoder.encode(request.getPassword());
 
         User user = new User(request.getUsername(), request.getEmail(), encodedPassword);
-        userRepository.save(user);
+        user = userRepository.save(user);
 
-        String token = jwtProvider.generateToken(user.getUsername(), user.getEmail());
+        String token = jwtProvider.generateToken(user.getUsername(), user.getId());
         return new AuthResponse(token, "User registered and authenticated successfully");
     }
 
     @Override
+    @Transactional(readOnly = true)
     public AuthResponse login(LoginRequest request) {
         User user = userRepository.findByUsername(request.getUsername())
                 .orElseGet(() -> userRepository.findByEmail(request.getUsername()).orElse(null));
@@ -49,7 +52,7 @@ public class AuthServiceImpl implements AuthService {
             throw new InvalidCredentialsException();
         }
 
-        String token = jwtProvider.generateToken(user.getUsername(), user.getEmail());
+        String token = jwtProvider.generateToken(user.getUsername(), user.getId());
         return new AuthResponse(token, "Login successful");
     }
 }

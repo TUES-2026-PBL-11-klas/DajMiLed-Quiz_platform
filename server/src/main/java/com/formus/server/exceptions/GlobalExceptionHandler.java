@@ -1,6 +1,7 @@
 package com.formus.server.exceptions;
 
 import com.formus.server.dtos.ApiResponse;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -8,7 +9,18 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice
+@Slf4j
 public class GlobalExceptionHandler {
+
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public ResponseEntity<ApiResponse> handleResourceNotFound(ResourceNotFoundException ex) {
+        ApiResponse response = new ApiResponse(
+                HttpStatus.NOT_FOUND.value(),
+                ex.getMessage(),
+                null);
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+    }
+
     @ExceptionHandler(EmailAlreadyExistsException.class)
     public ResponseEntity<ApiResponse> handleEmailExists(EmailAlreadyExistsException ex) {
         ApiResponse response = new ApiResponse(
@@ -45,8 +57,19 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
     }
 
+    @ExceptionHandler(InvalidJwtException.class)
+    public ResponseEntity<ApiResponse> handleInvalidJwt(InvalidJwtException ex) {
+        ApiResponse response = new ApiResponse(
+                HttpStatus.UNAUTHORIZED.value(),
+                ex.getMessage(),
+                null);
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
+    }
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ApiResponse> handleGenericException(Exception ex) {
+        log.error("Unexpected error", ex);
+
         ApiResponse response = new ApiResponse(
                 HttpStatus.INTERNAL_SERVER_ERROR.value(),
                 "An unexpected error occurred",

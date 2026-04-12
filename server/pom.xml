@@ -131,6 +131,11 @@
 			<version>1.18.30</version>
 			<scope>provided</scope>
 		</dependency>
+		<dependency>
+			<groupId>com.github.spotbugs</groupId>
+			<artifactId>spotbugs-annotations</artifactId>
+			<version>4.9.8</version>
+		</dependency>
 
     </dependencies>
 
@@ -141,6 +146,9 @@
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>3.13.0</version>
 				<configuration>
+					<compilerArgs>
+						<arg>-parameters</arg>
+					</compilerArgs>
 					<annotationProcessorPaths>
 						<path>
 							<groupId>org.projectlombok</groupId>
