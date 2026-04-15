@@ -57,8 +57,8 @@ export default function LandingPage() {
           </Link>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-32 w-full text-left">
-          <div className="glass-panel p-10 rounded-2xl border border-outline-variant/20 relative overflow-hidden group min-h-[250px] flex flex-col justify-end">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-32 w-full text-center">
+          <div className="glass-panel p-10 rounded-2xl border border-outline-variant/20 relative overflow-hidden group min-h-[250px] flex flex-col justify-end items-center">
             <div className="absolute top-0 right-0 w-32 h-32 bg-primary/10 rounded-full blur-2xl group-hover:scale-150 transition-transform duration-700" />
             <h3 className="font-display font-bold text-2xl text-on-surface mb-3 relative z-10">Semantic AI Grading</h3>
             <p className="text-on-surface-variant leading-relaxed relative z-10">
@@ -66,7 +66,7 @@ export default function LandingPage() {
             </p>
           </div>
           
-          <div className="glass-panel p-10 rounded-2xl border border-outline-variant/20 relative overflow-hidden group min-h-[250px] flex flex-col justify-end">
+          <div className="glass-panel p-10 rounded-2xl border border-outline-variant/20 relative overflow-hidden group min-h-[250px] flex flex-col justify-end items-center">
              <div className="absolute top-0 right-0 w-32 h-32 bg-secondary/10 rounded-full blur-2xl group-hover:scale-150 transition-transform duration-700" />
             <h3 className="font-display font-bold text-2xl text-on-surface mb-3 relative z-10">Effortless Generation</h3>
             <p className="text-on-surface-variant leading-relaxed relative z-10">
@@ -74,7 +74,7 @@ export default function LandingPage() {
             </p>
           </div>
           
-          <div className="glass-panel p-10 rounded-2xl border border-outline-variant/20 relative overflow-hidden group min-h-[250px] flex flex-col justify-end">
+          <div className="glass-panel p-10 rounded-2xl border border-outline-variant/20 relative overflow-hidden group min-h-[250px] flex flex-col justify-end items-center">
              <div className="absolute top-0 right-0 w-32 h-32 bg-tertiary/10 rounded-full blur-2xl group-hover:scale-150 transition-transform duration-700" />
             <h3 className="font-display font-bold text-2xl text-on-surface mb-3 relative z-10">Instant Explanations</h3>
             <p className="text-on-surface-variant leading-relaxed relative z-10">
@@ -93,8 +93,8 @@ export default function LandingPage() {
             {/* The Old Way Card */}
             <div className="p-10 rounded-[2.5rem] bg-surface-container-low border border-outline-variant/60 flex flex-col justify-between group hover:bg-surface-container transition-colors duration-500">
               <div>
-                <h3 className="text-xs font-black uppercase tracking-[0.3em] text-primary mb-8 block">The Static Past</h3>
-                <h4 className="font-display text-3xl font-bold text-on-surface mb-8">Legacy Platforms</h4>
+                <h3 className="text-xs font-black uppercase tracking-[0.3em] text-primary mb-8 text-center w-full">The Static Past</h3>
+                <h4 className="font-display text-3xl font-bold text-on-surface mb-8 text-center">Legacy Platforms</h4>
                 
                 <ul className="space-y-6">
                   <li className="flex items-start gap-4">
@@ -127,12 +127,12 @@ export default function LandingPage() {
             <div className="p-10 rounded-[2.5rem] primary-gradient-soft border border-primary/20 flex flex-col justify-between relative overflow-hidden group shadow-2xl shadow-primary/5">
               <div className="absolute top-0 right-0 w-64 h-64 bg-primary/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
               
-              <div className="relative z-10">
-                <div className="flex justify-between items-center mb-8">
-                  <h3 className="text-xs font-black uppercase tracking-[0.3em] text-primary block">The Intelligent Future</h3>
+              <div className="relative z-10 w-full">
+                <div className="mb-8 w-full text-center">
+                  <h3 className="text-xs font-black uppercase tracking-[0.3em] text-primary">The Intelligent Future</h3>
                 </div>
                 
-                <h4 className="font-display text-3xl font-bold text-on-surface mb-8">Modern Scholar</h4>
+                <h4 className="font-display text-3xl font-bold text-on-surface mb-8 text-center">Modern Scholar</h4>
                 
                 <ul className="space-y-6">
                   <li className="flex items-start gap-4">

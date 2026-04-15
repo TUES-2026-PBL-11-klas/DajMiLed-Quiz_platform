@@ -21,3 +21,10 @@ resources:
   limits:
     memory: "512Mi"
     cpu: "500m"
+
+frontend:
+  enabled: true
+  image:
+    repository: dajmiled/quiz-frontend
+    tag: latest
+    pullPolicy: IfNotPresent
