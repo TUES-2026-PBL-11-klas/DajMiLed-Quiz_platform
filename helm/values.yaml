@@ -1,6 +1,6 @@
 image:
   repository: dajmiled/quiz-server
-  tag: c24cdd2488bae722426202ce6465b95cb47e7bc8
+  tag: latest
   pullPolicy: Always
 
 replicaCount: 1
@@ -27,4 +27,11 @@ frontend:
   image:
     repository: dajmiled/quiz-frontend
     tag: latest
-    pullPolicy: IfNotPresent
+    pullPolicy: Always
+
+postgresql:
+  auth:
+    username: postgres
+    password: postgres
+    database: quizdb
+

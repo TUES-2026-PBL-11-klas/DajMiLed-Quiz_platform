@@ -48,6 +48,8 @@ jobs:
           context: ${{ inputs.context }}
           platforms: linux/amd64,linux/arm64
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/${{ inputs.image-name }}:${{ inputs.tag }}
+          tags: |
+            ${{ secrets.DOCKERHUB_USERNAME }}/${{ inputs.image-name }}:${{ inputs.tag }}
+            ${{ secrets.DOCKERHUB_USERNAME }}/${{ inputs.image-name }}:latest
           cache-from: type=gha
           cache-to: type=gha,mode=max

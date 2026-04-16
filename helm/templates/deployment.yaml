@@ -27,7 +27,7 @@ spec:
                   name: vault-auth
                   key: VAULT_TOKEN
             - name: SPRING_CLOUD_VAULT_HOST
-              value: "host.docker.internal"
+              value: "vault"
           resources:
             requests:
               memory: {{ .Values.resources.requests.memory }}
