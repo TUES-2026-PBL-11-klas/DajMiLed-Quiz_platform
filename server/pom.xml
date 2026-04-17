@@ -58,6 +58,12 @@
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
 		</dependency>
 
+		<!-- WebFlux for WebClient -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-webflux</artifactId>
+		</dependency>
+
 		<!-- PostgreSQL JDBC driver -->
 		<dependency>
 			<groupId>org.postgresql</groupId>
