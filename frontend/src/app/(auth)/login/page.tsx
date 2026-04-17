@@ -4,8 +4,33 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import { User, Lock, Eye, EyeOff, ArrowRight } from 'lucide-react';
 
+import { useRouter } from 'next/navigation';
+import { authService } from '../../../services/authService';
+
 export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+  const router = useRouter();
+
+  const handleLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError('');
+    
+    try {
+      const response = await authService.login({ username, password });
+      if (response && response.data && response.data.token) {
+        authService.saveToken(response.data.token);
+        // Redirect to dashboard on success
+        router.push('/');
+      } else {
+        setError('Login failed. Please check your credentials.');
+      }
+    } catch (err: any) {
+      setError(err.message || 'An error occurred during login');
+    }
+  };
 
   return (
     <div className="glass-panel w-full max-w-md p-10 rounded-xl shadow-2xl shadow-on-surface/5 border border-outline-variant/20">
@@ -14,7 +39,13 @@ export default function LoginPage() {
         <p className="text-on-surface-variant font-medium">Please enter your credentials to continue</p>
       </div>
       
-      <form className="space-y-6">
+      {error && (
+        <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded text-sm text-center">
+          {error}
+        </div>
+      )}
+      
+      <form className="space-y-6" onSubmit={handleLogin}>
 
         <div className="space-y-2">
           <label className="block text-sm font-semibold text-on-surface-variant px-1" htmlFor="username">
@@ -30,6 +61,8 @@ export default function LoginPage() {
               type="text" 
               placeholder="johndoe" 
               required 
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
               className="w-full pl-12 pr-4 py-4 bg-surface-container-low border border-outline-variant/30 rounded-full text-on-surface placeholder:text-on-surface-variant/50 focus:ring-2 focus:ring-primary-container outline-none transition-all"
             />
           </div>
@@ -52,6 +85,8 @@ export default function LoginPage() {
               type={showPassword ? "text" : "password"} 
               placeholder="••••••••" 
               required 
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
               className="w-full pl-12 pr-12 py-4 bg-surface-container-low border border-outline-variant/30 rounded-full text-on-surface placeholder:text-on-surface-variant/50 focus:ring-2 focus:ring-primary-container outline-none transition-all"
             />
             <div className="absolute inset-y-0 right-0 pr-4 flex items-center">
