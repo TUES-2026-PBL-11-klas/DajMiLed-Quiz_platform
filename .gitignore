@@ -157,6 +157,9 @@ ENV/
 env.bak/
 venv.bak/
 
+# Helm secrets (contains credentials, should never be committed)
+helm/values-secrets.yaml
+
 # Spyder project settings
 .spyderproject
 .spyproject
@@ -214,3 +217,5 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+.claude

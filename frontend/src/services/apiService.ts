@@ -1,9 +1,11 @@
 import { handleError } from '../utils/errorHandler';
+import { authService } from './authService';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || '/api';
 
 interface RequestOptions extends RequestInit {
   params?: Record<string, string>;
+  skipAuth?: boolean;
 }
 
 export const apiService = {
@@ -22,14 +24,18 @@ export const apiService = {
   async request<T>(endpoint: string, options: RequestOptions = {}): Promise<T> {
     try {
       let url = `${API_BASE_URL}${endpoint}`;
-      
+
       if (options.params) {
         const query = new URLSearchParams(options.params).toString();
         url += `?${query}`;
       }
 
+      const isAuthEndpoint = endpoint.startsWith('/auth/') || endpoint.startsWith('/actuator/');
+      const shouldIncludeAuth = !isAuthEndpoint && !options.skipAuth;
+
       const headers = {
         'Content-Type': 'application/json',
+        ...(shouldIncludeAuth ? authService.getAuthHeader() : {}),
         ...options.headers,
       };
 

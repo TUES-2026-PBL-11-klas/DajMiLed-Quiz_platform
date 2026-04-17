@@ -35,7 +35,7 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: vault
+  name: {{ .Release.Name }}-vault
   labels:
     app: {{ .Release.Name }}-vault
 spec:
