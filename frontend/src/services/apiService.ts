@@ -1,5 +1,5 @@
 import { handleError } from '../utils/errorHandler';
-import { authService } from './authService';
+import { authToken } from '../utils/authToken';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || '/api';
 
@@ -35,7 +35,7 @@ export const apiService = {
 
       const headers = {
         'Content-Type': 'application/json',
-        ...(shouldIncludeAuth ? authService.getAuthHeader() : {}),
+        ...(shouldIncludeAuth ? authToken.getAuthHeader() : {}),
         ...options.headers,
       };
 

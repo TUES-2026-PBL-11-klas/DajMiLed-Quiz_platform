@@ -1,6 +1,8 @@
 import { apiService } from './apiService';
+import { authToken } from '../utils/authToken';
 
 export interface AuthResponse {
+  status: string;
   message: string;
   data: {
     token: string;
@@ -18,27 +20,8 @@ export const authService = {
     return apiService.post<AuthResponse>('/auth/register', credentials);
   },
 
-  getToken: (): string | null => {
-    if (typeof window !== 'undefined') {
-      return localStorage.getItem('jwt_token');
-    }
-    return null;
-  },
-
-  saveToken: (token: string) => {
-    if (typeof window !== 'undefined') {
-      localStorage.setItem('jwt_token', token);
-    }
-  },
-
-  logout: () => {
-    if (typeof window !== 'undefined') {
-      localStorage.removeItem('jwt_token');
-    }
-  },
-
-  getAuthHeader: (): Record<string, string> => {
-    const token = authService.getToken();
-    return token ? { Authorization: `Bearer ${token}` } : {};
-  }
+  getToken: authToken.get,
+  saveToken: authToken.save,
+  logout: authToken.remove,
+  getAuthHeader: authToken.getAuthHeader
 };

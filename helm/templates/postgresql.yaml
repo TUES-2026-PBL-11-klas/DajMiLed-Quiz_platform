@@ -65,7 +65,7 @@ metadata:
   labels:
     app: {{ .Release.Name }}-postgresql
 spec:
-  type: ClusterIP
+  clusterIP: None
   ports:
     - port: 5432
       targetPort: 5432
