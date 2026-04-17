@@ -21,4 +21,9 @@ public class CreateAiFormRequest {
     private Integer questions;
 
     private String difficulty;
+
+    public CreateAiFormRequest(String title, String context) {
+        this.title = title;
+        this.context = context;
+    }
 }
