@@ -66,6 +66,16 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
     }
 
+    @ExceptionHandler(AiServiceException.class)
+    public ResponseEntity<ApiResponse> handleAiServiceException(AiServiceException ex) {
+        log.error("AI Service Error: {}", ex.getMessage());
+        ApiResponse response = new ApiResponse(
+                HttpStatus.BAD_GATEWAY.value(),
+                ex.getMessage(),
+                null);
+        return ResponseEntity.status(HttpStatus.BAD_GATEWAY).body(response);
+    }
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ApiResponse> handleGenericException(Exception ex) {
         log.error("Unexpected error", ex);
