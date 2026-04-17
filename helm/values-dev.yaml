@@ -1,8 +1,8 @@
 image:
   tag: latest
-  pullPolicy: IfNotPresent
+  pullPolicy: Always
 
 frontend:
   image:
     tag: latest
-    pullPolicy: IfNotPresent
+    pullPolicy: Always
