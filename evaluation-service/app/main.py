@@ -1,6 +1,6 @@
 from fastapi import FastAPI
-from app.models.evaluation import EvaluationRequest, EvaluationResponse
-from app.services.evaluator import SemanticEvaluator
+from app.models.evaluation import EvaluationRequest, EvaluationResponse, QuestionType
+from app.services.evaluator import SemanticEvaluator, ClosedQuestionEvaluator
 
 app = FastAPI(
     title="Context Based Evaluation Service",
@@ -8,7 +8,8 @@ app = FastAPI(
     version="0.1.0",
 )
 
-evaluator = SemanticEvaluator(threshold=0.46)
+semantic_evaluator = SemanticEvaluator(threshold=0.46)
+closed_evaluator = ClosedQuestionEvaluator()
 
 @app.get("/")
 async def root():
@@ -16,7 +17,9 @@ async def root():
 
 @app.post("/evaluate", response_model=EvaluationResponse)
 async def evaluate_answer(request: EvaluationRequest):
-    return evaluator.evaluate(request)
+    if request.question_type == QuestionType.closed:
+        return closed_evaluator.evaluate(request)
+    return semantic_evaluator.evaluate(request)
 
 if __name__ == "__main__":
     import uvicorn
