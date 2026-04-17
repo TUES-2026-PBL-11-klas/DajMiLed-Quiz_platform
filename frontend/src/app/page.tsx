@@ -78,7 +78,7 @@ export default function LandingPage() {
              <div className="absolute top-0 right-0 w-32 h-32 bg-tertiary/10 rounded-full blur-2xl group-hover:scale-150 transition-transform duration-700" />
             <h3 className="font-display font-bold text-2xl text-on-surface mb-3 relative z-10">Instant Explanations</h3>
             <p className="text-on-surface-variant leading-relaxed relative z-10">
-               Students shouldn't wait weeks to learn from their mistakes. We provide immediate, personalized AI explanations for every incorrect answer.
+               Students shouldn&apos;t wait weeks to learn from their mistakes. We provide immediate, personalized AI explanations for every incorrect answer.
             </p>
           </div>
         </div>
@@ -112,14 +112,14 @@ export default function LandingPage() {
                   <li className="flex items-start gap-4">
                     <div className="w-1.5 h-1.5 rounded-full bg-error mt-2.5 shrink-0 opacity-40" />
                     <p className="text-on-surface font-medium leading-relaxed">
-                      Students wait days for feedback, losing the "teachable moment" entirely.
+                      Students wait days for feedback, losing the &quot;teachable moment&quot; entirely.
                     </p>
                   </li>
                 </ul>
               </div>
               
               <div className="mt-12 pt-8 border-t border-outline-variant/10 italic text-primary font-bold text-sm">
-                "As slow as it is outdated."
+                &quot;As slow as it is outdated.&quot;
               </div>
             </div>
 
