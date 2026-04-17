@@ -1,6 +1,8 @@
 package com.formus.server.client.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import lombok.Getter;
 
 import java.util.List;
@@ -8,8 +10,10 @@ import java.util.List;
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Getter
 public class AiQuestion {
+    @JsonProperty("question_text")
     private final String questionText;
     private final List<String> options;
+    @JsonProperty("correct_answer")
     private final String correctAnswer;
     private final String explanation;
 

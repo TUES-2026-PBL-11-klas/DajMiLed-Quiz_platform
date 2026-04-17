@@ -31,7 +31,7 @@ public class AiQuestionClient {
                     .bodyValue(request)
                     .retrieve()
                     .bodyToMono(AiGenerateResponse.class)
-                    .timeout(Duration.ofSeconds(30))
+                    .timeout(Duration.ofSeconds(120))
                     .retryWhen(Retry.backoff(3, Duration.ofSeconds(2))
                             .filter(t -> t instanceof WebClientResponseException.ServiceUnavailable
                                     || t instanceof WebClientResponseException.BadGateway))

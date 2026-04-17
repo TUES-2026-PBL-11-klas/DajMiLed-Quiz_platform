@@ -31,8 +31,15 @@ public class AiFormServiceImpl implements AiFormService {
         Long userId = jwtProvider.getIdFromToken(token);
         log.info("User {} is creating an AI formulated test: {}", userId, request.getTitle());
 
-        AiGenerateRequest aiRequest = new AiGenerateRequest(request.getContext());
-        AiGenerateResponse aiResponse = aiQuestionClient.generateQuestions(aiRequest);
+        AiGenerateResponse aiResponse;
+        if (request.getQuestions() != null && request.getDifficulty() != null) {
+            AiGenerateRequest aiRequest = new AiGenerateRequest(request.getContext(), request.getQuestions(),
+                    request.getDifficulty());
+            aiResponse = aiQuestionClient.generateQuestions(aiRequest);
+        } else {
+            AiGenerateRequest aiRequest = new AiGenerateRequest(request.getContext());
+            aiResponse = aiQuestionClient.generateQuestions(aiRequest);
+        }
 
         Form form = new Form(request.getTitle(), userId);
 
