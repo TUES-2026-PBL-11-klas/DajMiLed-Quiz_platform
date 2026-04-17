@@ -13,7 +13,7 @@ export const apiService = {
     return this.request<T>(endpoint, { ...options, method: 'GET' });
   },
 
-  async post<T>(endpoint: string, body: any, options?: RequestOptions): Promise<T> {
+  async post<T>(endpoint: string, body: unknown, options?: RequestOptions): Promise<T> {
     return this.request<T>(endpoint, {
       ...options,
       method: 'POST',

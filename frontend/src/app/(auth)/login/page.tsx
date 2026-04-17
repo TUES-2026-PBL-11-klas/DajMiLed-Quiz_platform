@@ -27,8 +27,8 @@ export default function LoginPage() {
       } else {
         setError('Login failed. Please check your credentials.');
       }
-    } catch (err: any) {
-      setError(err.message || 'An error occurred during login');
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : 'An error occurred during login');
     }
   };
 

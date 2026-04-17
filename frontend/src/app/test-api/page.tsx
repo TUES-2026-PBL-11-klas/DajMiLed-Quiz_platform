@@ -19,8 +19,8 @@ export default function TestApiPage() {
       const response = await formService.getForms();
       addLog(`Success! Received ${response.data.totalElements} forms.`);
       console.log("Forms Response:", response);
-    } catch (error: any) {
-      addLog(`Error: ${error.message}`);
+    } catch (error: unknown) {
+      addLog(`Error: ${error instanceof Error ? error.message : String(error)}`);
     } finally {
       setLoading(false);
     }
@@ -36,8 +36,8 @@ export default function TestApiPage() {
         role: "USER"
       });
       addLog(`Success! Registered user: ${response.data.username}`);
-    } catch (error: any) {
-      addLog(`Error: ${error.message}`);
+    } catch (error: unknown) {
+      addLog(`Error: ${error instanceof Error ? error.message : String(error)}`);
     } finally {
       setLoading(false);
     }

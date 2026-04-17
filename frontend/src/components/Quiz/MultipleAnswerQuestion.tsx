@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useRef, useMemo } from 'react';
 
 export interface Option {
   id: string;
@@ -22,12 +22,9 @@ export const MultipleAnswerQuestion: React.FC<MultipleAnswerQuestionProps> = ({
   onChange,
   hint = 'Select all that apply',
 }) => {
-  const [selected, setSelected] = useState<Set<string>>(new Set(values));
   const containerRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    setSelected(new Set(values));
-  }, [values]);
+  const selected = useMemo(() => new Set(values), [values]);
 
   const toggle = (id: string) => {
     const next = new Set(selected);
@@ -36,7 +33,6 @@ export const MultipleAnswerQuestion: React.FC<MultipleAnswerQuestionProps> = ({
     } else {
       next.add(id);
     }
-    setSelected(next);
     onChange?.(Array.from(next));
   };
 
