@@ -60,7 +60,7 @@ class FormServiceImplTest {
     @Test
     void getForms_returnsPage() {
         Pageable pageable = Pageable.unpaged();
-        Form form = new Form("Title", 1L);
+        Form form = new Form("Title", 1L, "This is a sufficiently long context for validation");
         Page<Form> page = new PageImpl<>(List.of(form));
 
         when(formRepository.findAll(pageable)).thenReturn(page);
@@ -77,7 +77,7 @@ class FormServiceImplTest {
     void getMyForms_returnsPage() {
         String token = "mockToken";
         Pageable pageable = Pageable.unpaged();
-        Form form = new Form("My Title", 1L);
+        Form form = new Form("My Title", 1L, "This is a sufficiently long context for validation");
         Page<Form> page = new PageImpl<>(List.of(form));
 
         when(jwtProvider.getIdFromToken(token)).thenReturn(1L);
@@ -94,7 +94,7 @@ class FormServiceImplTest {
 
     @Test
     void getForm_returnsFullFormResponse() {
-        Form form = new Form("Form", 1L);
+        Form form = new Form("Form", 1L, "This is a sufficiently long context for validation");
         ReflectionTestUtils.setField(form, "id", 1L);
 
         Question question = new Question(form, "Q1", "CLOSED");

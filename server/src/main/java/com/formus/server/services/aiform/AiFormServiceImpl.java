@@ -41,7 +41,7 @@ public class AiFormServiceImpl implements AiFormService {
             aiResponse = aiQuestionClient.generateQuestions(aiRequest);
         }
 
-        Form form = new Form(request.getTitle(), userId);
+        Form form = new Form(request.getTitle(), userId, request.getContext());
 
         if (aiResponse.getQuestions() != null && !aiResponse.getQuestions().isEmpty()) {
             for (AiQuestion aiQuestion : aiResponse.getQuestions()) {

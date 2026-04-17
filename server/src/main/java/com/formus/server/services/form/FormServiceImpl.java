@@ -32,7 +32,7 @@ public class FormServiceImpl implements FormService {
     @Transactional
     public Form createForm(CreateFormRequest request, String token) {
         Long id = jwtProvider.getIdFromToken(token);
-        Form form = new Form(request.getTitle(), id);
+        Form form = new Form(request.getTitle(), id, request.getContext());
         return formRepository.save(form);
     }
 

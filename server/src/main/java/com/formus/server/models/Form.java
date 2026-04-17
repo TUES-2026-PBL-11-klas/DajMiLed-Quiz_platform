@@ -33,13 +33,17 @@ public class Form {
     @Column(name = "created_by", nullable = false)
     private Long createdBy;
 
+    @Column(columnDefinition = "TEXT")
+    private String context;
+
     @OneToMany(mappedBy = "form", cascade = CascadeType.ALL, orphanRemoval = true)
     @BatchSize(size = 100)
     private List<Question> questions = new ArrayList<>();
 
-    public Form(String title, Long createdBy) {
+    public Form(String title, Long createdBy, String context) {
         this.title = title;
         this.createdBy = createdBy;
+        this.context = context;
     }
 
     public List<Question> getQuestions() {
