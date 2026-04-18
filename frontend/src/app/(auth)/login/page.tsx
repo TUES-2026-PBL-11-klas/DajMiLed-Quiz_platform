@@ -22,8 +22,8 @@ export default function LoginPage() {
       const response = await authService.login({ username, password });
       if (response && response.data && response.data.token) {
         authService.saveToken(response.data.token);
-        // Redirect to dashboard on success
-        router.push('/');
+        localStorage.setItem('quiz_username', response.data.username || username);
+        router.push('/dashboard');
       } else {
         setError('Login failed. Please check your credentials.');
       }

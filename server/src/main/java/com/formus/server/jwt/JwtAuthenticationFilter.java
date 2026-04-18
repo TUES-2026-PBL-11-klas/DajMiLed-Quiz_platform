@@ -25,32 +25,32 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request,
-            HttpServletResponse response,
-            FilterChain filterChain) throws ServletException, IOException {
+                                    HttpServletResponse response,
+                                    FilterChain filterChain) throws ServletException, IOException {
         String header = request.getHeader("Authorization");
 
-        if (header == null || !header.startsWith("Bearer ")) {
-            filterChain.doFilter(request, response);
-            return;
-        }
+        if (header != null && header.startsWith("Bearer ")) {
+            try {
+                String token = jwtProvider.extractTokenFromHeader(header);
 
-        String token = jwtProvider.extractTokenFromHeader(header);
+                if (jwtProvider.validateToken(token)) {
+                    String username = jwtProvider.getUsernameFromToken(token);
+                    if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+                        User user = userRepository.findByUsername(username)
+                                .orElseGet(() -> userRepository.findByEmail(username).orElse(null));
 
-        if (jwtProvider.validateToken(token)) {
-            String username = jwtProvider.getUsernameFromToken(token);
-            if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-                User user = userRepository.findByUsername(username)
-                        .orElseGet(() -> userRepository.findByEmail(username).orElse(null));
-
-                if (user != null) {
-                    UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
-                            user,
-                            null,
-                            Collections.emptyList()
-                    );
-                    authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                    SecurityContextHolder.getContext().setAuthentication(authentication);
+                        if (user != null) {
+                            UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
+                                    user,
+                                    null,
+                                    Collections.emptyList()
+                            );
+                            authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                            SecurityContextHolder.getContext().setAuthentication(authentication);
+                        }
+                    }
                 }
+            } catch (RuntimeException ex) {
             }
         }
 

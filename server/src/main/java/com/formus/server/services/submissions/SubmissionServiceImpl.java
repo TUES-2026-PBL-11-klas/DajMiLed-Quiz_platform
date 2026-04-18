@@ -89,11 +89,11 @@ public class SubmissionServiceImpl implements SubmissionService {
                         }
 
                         QuestionType type = question.getType();
-                        boolean isClosedType = type == QuestionType.CLOSED;
+                        boolean isOpenEndedType = type == QuestionType.OPEN || type == QuestionType.OPEN_ENDED;
 
                         EvaluationResponseDTO evalRes;
 
-                        if (isClosedType) {
+                        if (!isOpenEndedType) {
                                 CorrectAnswer correctAnswer = correctAnswerMap.get(question.getId());
                                 if (correctAnswer == null) {
                                         throw new ResourceNotFoundException(
@@ -130,11 +130,16 @@ public class SubmissionServiceImpl implements SubmissionService {
                                                                         + question.getId());
                                 }
 
+                                String evaluationQuestionType = "open";
+                                if (type == QuestionType.CLOSED) {
+                                        evaluationQuestionType = "closed";
+                                }
+
                                 EvaluationRequestDTO evalReq = EvaluationRequestDTO.builder()
                                                 .context(form.getContext() != null ? form.getContext() : "")
                                                 .question(question.getText())
                                                 .answer(userAnswerText)
-                                                .questionType(question.getType().getValue())
+                                                .questionType(evaluationQuestionType)
                                                 .build();
 
                                 evalRes = evaluationService.evaluateAnswer(evalReq);

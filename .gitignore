@@ -157,6 +157,10 @@ ENV/
 env.bak/
 venv.bak/
 
+# Spring Boot local configuration with secrets
+**/application-local.properties
+**/application-dev.properties
+
 # Helm secrets (contains credentials, should never be committed)
 helm/values-secrets.yaml
 
@@ -219,3 +223,4 @@ __marimo__/
 .streamlit/secrets.toml
 
 .claude
+*.bat
