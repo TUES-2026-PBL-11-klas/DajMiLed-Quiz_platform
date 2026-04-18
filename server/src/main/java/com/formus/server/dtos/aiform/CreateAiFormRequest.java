@@ -1,4 +1,4 @@
-package com.formus.server.dtos.forms;
+package com.formus.server.dtos.aiform;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class CreateFormRequest {
+public class CreateAiFormRequest {
 
     @NotBlank(message = "Title is required")
     private String title;
@@ -17,4 +17,13 @@ public class CreateFormRequest {
     @NotBlank(message = "Context is required")
     @Size(min = 30, message = "Context must be at least 30 characters")
     private String context;
+
+    private Integer questions;
+
+    private String difficulty;
+
+    public CreateAiFormRequest(String title, String context) {
+        this.title = title;
+        this.context = context;
+    }
 }

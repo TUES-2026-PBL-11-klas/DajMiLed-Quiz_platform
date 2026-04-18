@@ -39,7 +39,7 @@ class QuestionServiceImplTest {
         request.setText("Q?");
         request.setType("OPEN");
 
-        Form form = new Form("Form", 1L);
+        Form form = new Form("Form", 1L, "This is a sufficiently long context for validation");
 
         when(formRepository.findById(1L)).thenReturn(Optional.of(form));
         when(questionRepository.save(any())).thenAnswer(i -> i.getArgument(0));

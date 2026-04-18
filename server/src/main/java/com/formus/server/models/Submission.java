@@ -1,5 +1,6 @@
 package com.formus.server.models;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -14,19 +15,17 @@ import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.BatchSize;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
-
 @Entity
-@Table(name = "questions")
+@Table(name = "submissions")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Question {
+public class Submission {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -37,32 +36,28 @@ public class Question {
     @SuppressFBWarnings(value = { "EI_EXPOSE_REP" }, justification = "Required by JPA")
     private Form form;
 
-    @Column(nullable = false)
-    private String text;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 
-    @Column(nullable = false)
-    @jakarta.persistence.Enumerated(jakarta.persistence.EnumType.STRING)
-    private QuestionType type;
+    @Column(name = "created_at", nullable = false, updatable = false)
+    private LocalDateTime createdAt;
 
-    @OneToMany(mappedBy = "question", cascade = CascadeType.ALL, orphanRemoval = true)
-    @BatchSize(size = 100)
-    private List<Choice> choices = new ArrayList<>();
+    @OneToMany(mappedBy = "submission", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Answer> answers = new ArrayList<>();
 
-    public Question(Form form, String text, QuestionType type) {
+    public Submission(Form form, User user) {
         this.form = form;
-        this.text = text;
-        this.type = type;
+        this.user = user;
+        this.createdAt = LocalDateTime.now();
     }
 
-    public void setForm(Form form) {
-        this.form = form;
+    public void addAnswer(Answer answer) {
+        answers.add(answer);
+        answer.setSubmission(this);
     }
 
-    public void addChoice(Choice choice) {
-        choices.add(choice);
-    }
-
-    public List<Choice> getChoices() {
-        return Collections.unmodifiableList(choices);
+    public List<Answer> getAnswers() {
+        return Collections.unmodifiableList(answers);
     }
 }

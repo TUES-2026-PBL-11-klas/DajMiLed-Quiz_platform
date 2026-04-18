@@ -38,7 +38,7 @@ class ChoiceServiceImplTest {
         request.setQuestionId(1L);
         request.setText("A");
 
-        Question question = new Question(null, "Q", "OPEN");
+        Question question = new Question(null, "Q", com.formus.server.models.QuestionType.OPEN);
 
         when(questionRepository.findById(1L)).thenReturn(Optional.of(question));
         when(choiceRepository.save(any())).thenAnswer(i -> i.getArgument(0));
