@@ -169,11 +169,9 @@ public class SubmissionServiceImpl implements SubmissionService {
 
                 logger.info("Successfully persisted submission ID: {}", submission.getId());
 
-                float averageScore = request.getAnswers().size() > 0 ? totalScore / request.getAnswers().size() : 0f;
-
                 return SubmissionResponse.builder()
                                 .submissionId(submission.getId())
-                                .totalScore(averageScore)
+                                .totalScore(totalScore)
                                 .results(resultResponses)
                                 .build();
         }
