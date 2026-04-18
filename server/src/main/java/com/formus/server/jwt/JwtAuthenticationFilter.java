@@ -50,7 +50,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                         }
                     }
                 }
-            } catch (Exception ex) {
+            } catch (RuntimeException ex) {
             }
         }
 
