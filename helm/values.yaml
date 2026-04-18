@@ -1,6 +1,6 @@
 image:
   repository: dajmiled/quiz-server
-  tag: 4dcd35542b2a553b819881a9919b6937d7e97296
+  tag: b31e118b398b78a9c9afa1aae24bfcd71050df0c
   pullPolicy: Always
 
 replicaCount: 1
