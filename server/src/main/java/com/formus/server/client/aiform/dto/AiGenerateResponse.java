@@ -1,4 +1,4 @@
-package com.formus.server.client.dto;
+package com.formus.server.client.aiform.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
