@@ -22,7 +22,6 @@ public class QuestionController {
 
     @PostMapping
     public ResponseEntity<ApiResponse> createQuestion(@Valid @RequestBody CreateQuestionRequest request) {
-        System.out.println(request);
         Question createdQuestion = questionService.createQuestion(request);
         ApiResponse response = new ApiResponse(
                 HttpStatus.CREATED.value(),
