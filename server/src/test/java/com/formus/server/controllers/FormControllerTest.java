@@ -71,6 +71,7 @@ class FormControllerTest {
     void setUp() {
         request = new CreateFormRequest();
         request.setTitle("Test Form");
+        request.setContext("This is a sufficiently long context for validation");
     }
 
     private String toJson(Object obj) throws Exception {
@@ -79,7 +80,7 @@ class FormControllerTest {
 
     @Test
     void createForm_returnsCreated() throws Exception {
-        Form form = new Form("Test Form", 1L);
+        Form form = new Form("Test Form", 1L, "This is a sufficiently long context for validation");
         ReflectionTestUtils.setField(form, "id", 1L);
 
         when(jwtProvider.extractTokenFromHeader(any())).thenReturn("token");
@@ -110,7 +111,7 @@ class FormControllerTest {
 
     @Test
     void getForms_returnsOk() throws Exception {
-        Form form = new Form("Title", 1L);
+        Form form = new Form("Title", 1L, "This is a sufficiently long context for validation");
         ReflectionTestUtils.setField(form, "id", 1L);
         FormResponse formResponse = new FormResponse(form);
         Page<FormResponse> page = new PageImpl<>(List.of(formResponse));
@@ -151,7 +152,7 @@ class FormControllerTest {
 
     @Test
     void getMyForms_returnsOk() throws Exception {
-        Form form = new Form("My Title", 1L);
+        Form form = new Form("My Title", 1L, "This is a sufficiently long context for validation");
         ReflectionTestUtils.setField(form, "id", 1L);
         FormResponse formResponse = new FormResponse(form);
         Page<FormResponse> page = new PageImpl<>(List.of(formResponse));

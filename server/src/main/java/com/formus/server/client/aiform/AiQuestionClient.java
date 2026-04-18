@@ -1,7 +1,7 @@
-package com.formus.server.client;
+package com.formus.server.client.aiform;
 
-import com.formus.server.client.dto.AiGenerateRequest;
-import com.formus.server.client.dto.AiGenerateResponse;
+import com.formus.server.client.aiform.dto.AiGenerateRequest;
+import com.formus.server.client.aiform.dto.AiGenerateResponse;
 import com.formus.server.exceptions.AiServiceException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;

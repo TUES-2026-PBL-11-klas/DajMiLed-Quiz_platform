@@ -1,12 +1,13 @@
 package com.formus.server.services.aiform;
 
-import com.formus.server.client.AiQuestionClient;
-import com.formus.server.client.dto.AiGenerateRequest;
-import com.formus.server.client.dto.AiGenerateResponse;
-import com.formus.server.client.dto.AiQuestion;
+import com.formus.server.client.aiform.AiQuestionClient;
+import com.formus.server.client.aiform.dto.AiGenerateRequest;
+import com.formus.server.client.aiform.dto.AiGenerateResponse;
+import com.formus.server.client.aiform.dto.AiQuestion;
 import com.formus.server.dtos.aiform.CreateAiFormRequest;
 import com.formus.server.jwt.JwtProvider;
 import com.formus.server.models.Form;
+import com.formus.server.repositories.CorrectAnswerRepository;
 import com.formus.server.repositories.FormRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -31,6 +32,9 @@ class AiFormServiceTest {
 
     @Mock
     private JwtProvider jwtProvider;
+
+    @Mock
+    private CorrectAnswerRepository correctAnswerRepository;
 
     @InjectMocks
     private AiFormServiceImpl aiFormService;
