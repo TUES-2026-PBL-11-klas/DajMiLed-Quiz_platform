@@ -10,6 +10,7 @@ import { choiceService } from '@/services/choiceService';
 export function useCreateForm() {
   const router = useRouter();
   const [title, setTitle] = useState('');
+  const [context, setContext] = useState('');
   const [questions, setQuestions] = useState<DraftQuestion[]>([
     { id: uid(), text: '', type: 'multiple_choice', choices: [{ id: uid(), text: '' }] },
   ]);
@@ -64,6 +65,8 @@ export function useCreateForm() {
   const handleSave = async () => {
     setError('');
     if (!title.trim()) { setError('Please enter a quiz title.'); return; }
+    if (!context.trim()) { setError('Please enter a quiz context/description.'); return; }
+    if (context.trim().length < 30) { setError('Context must be at least 30 characters long.'); return; }
     if (questions.length === 0) { setError('Add at least one question.'); return; }
     for (const q of questions) {
       if (!q.text.trim()) { setError('All questions must have text.'); return; }
@@ -75,15 +78,21 @@ export function useCreateForm() {
 
     setSaving(true);
     try {
-      const formRes = await formService.createForm(title.trim());
+      const formRes = await formService.createForm(title.trim(), context.trim());
       const formId = formRes.data;
+      if (!formId) throw new Error('Failed to create form');
+
       for (const q of questions) {
         const qRes = await questionService.createQuestion({ formId, text: q.text.trim(), type: q.type });
         const questionId = qRes.data;
+        if (!questionId) throw new Error('Failed to create question');
+
         for (const c of q.choices.filter((ch) => ch.text.trim())) {
           await choiceService.createChoice({ questionId, text: c.text.trim() });
         }
       }
+
+      await new Promise(resolve => setTimeout(resolve, 500));
       router.push(`/quiz/${formId}`);
     } catch (e: unknown) {
       setError(e instanceof Error ? e.message : 'Failed to save quiz. Please try again.');
@@ -94,6 +103,7 @@ export function useCreateForm() {
 
   return {
     title, setTitle,
+    context, setContext,
     questions,
     saving,
     error,

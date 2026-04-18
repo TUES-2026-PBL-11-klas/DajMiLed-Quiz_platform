@@ -10,7 +10,7 @@ import { QuizQuestionView } from '@/components/Quiz/QuizQuestionView';
 export default function QuizTakePage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params);
   const router = useRouter();
-  const { form, loading, error, currentIndex, setCurrentIndex, evaluating, allDone, setAllDone, setAnswers, getAnswer, setAnswer, handleSubmitQuestion } = useQuiz(id);
+  const { form, loading, error, currentIndex, setCurrentIndex, evaluating, allDone, setAllDone, setAnswers, submissionResult, getAnswer, setAnswer, handleSubmitQuestion, submitQuiz } = useQuiz(id);
 
   if (loading) {
     return (
@@ -46,6 +46,7 @@ export default function QuizTakePage({ params }: { params: Promise<{ id: string 
       <QuizResults
         form={form}
         getAnswer={getAnswer}
+        submissionResult={submissionResult}
         onRetake={() => { setAnswers({}); setCurrentIndex(0); setAllDone(false); }}
       />
     );
@@ -77,7 +78,7 @@ export default function QuizTakePage({ params }: { params: Promise<{ id: string 
           onSubmit={handleSubmitQuestion}
           onPrev={() => setCurrentIndex((i) => Math.max(0, i - 1))}
           onNext={() => setCurrentIndex((i) => i + 1)}
-          onFinish={() => setAllDone(true)}
+          onFinish={() => submitQuiz(form.id, questions)}
         />
       </main>
     </div>

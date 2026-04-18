@@ -12,7 +12,7 @@ import { PlusCircle } from 'lucide-react';
 export default function CreateFormPage() {
   const router = useRouter();
   const { isLoggedIn } = useAuth();
-  const { title, setTitle, questions, saving, error, addQuestion, removeQuestion, updateQuestion, changeType, addChoice, removeChoice, updateChoice, handleSave } = useCreateForm();
+  const { title, setTitle, context, setContext, questions, saving, error, addQuestion, removeQuestion, updateQuestion, changeType, addChoice, removeChoice, updateChoice, handleSave } = useCreateForm();
 
   if (!isLoggedIn) {
     return (
@@ -40,6 +40,12 @@ export default function CreateFormPage() {
         <div className="mb-10">
           <label className="block text-sm font-bold text-on-surface-variant mb-2" htmlFor="title">Quiz Title</label>
           <input id="title" type="text" value={title} onChange={(e) => setTitle(e.target.value)} placeholder="e.g. Introduction to Philosophy" className="w-full px-5 py-3.5 rounded-2xl bg-surface-container-low border border-outline-variant/30 focus:ring-2 focus:ring-primary text-on-surface placeholder:text-on-surface-variant/40 outline-none text-lg font-semibold" />
+        </div>
+
+        <div className="mb-10">
+          <label className="block text-sm font-bold text-on-surface-variant mb-2" htmlFor="context">Quiz Description/Context (minimum 30 characters)</label>
+          <textarea id="context" value={context} onChange={(e) => setContext(e.target.value)} placeholder="Describe the topic, learning objectives, or any context for this quiz..." rows={3} className="w-full px-5 py-3.5 rounded-2xl bg-surface-container-low border border-outline-variant/30 focus:ring-2 focus:ring-primary text-on-surface placeholder:text-on-surface-variant/40 outline-none text-base" />
+          <p className="text-xs text-on-surface-variant mt-1">{context.length} / 30 characters minimum</p>
         </div>
 
         <div className="flex flex-col gap-6 mb-8">

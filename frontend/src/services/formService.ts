@@ -55,8 +55,8 @@ export const formService = {
     });
   },
 
-  createForm: async (title: string): Promise<ApiResponse<number>> => {
-    return apiService.post<ApiResponse<number>>('/forms', { title }, {
+  createForm: async (title: string, context: string): Promise<ApiResponse<number>> => {
+    return apiService.post<ApiResponse<number>>('/forms', { title, context }, {
       headers: authService.getAuthHeader()
     });
   }

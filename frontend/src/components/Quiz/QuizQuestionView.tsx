@@ -24,25 +24,33 @@ interface Props {
 
 export function QuizQuestionView({ q, ans, currentIndex, isLast, evaluating, onSetAnswer, onSubmit, onPrev, onNext, onFinish }: Props) {
   const options = q.choices?.map((c) => ({ id: c.id.toString(), label: c.text })) ?? [];
+  const normalizedType = q.type?.toLowerCase() ?? '';
 
   return (
     <form onSubmit={(e) => { e.preventDefault(); if (!ans.submitted) onSubmit(q); }} className="flex flex-col gap-8">
-      {q.type === 'multiple_choice' && (
+      {(normalizedType === 'multiple_choice' || normalizedType === 'single_choice' || normalizedType === 'closed') && (
         <MultipleChoiceQuestion question={q.text} options={options} value={ans.singleChoice} onChange={(val) => onSetAnswer(q.id, { singleChoice: val })} />
       )}
-      {q.type === 'multiple_answer' && (
+      {(normalizedType === 'multiple_answer') && (
         <MultipleAnswerQuestion question={q.text} options={options} values={ans.multiChoice} onChange={(vals) => onSetAnswer(q.id, { multiChoice: vals })} />
       )}
-      {q.type === 'open_ended' && (
+      {(normalizedType === 'open_ended' || normalizedType === 'open') && (
         <OpenEndedQuestion question={q.text} value={ans.openText} onChange={(val) => onSetAnswer(q.id, { openText: val })} />
       )}
 
-      {ans.submitted && q.type === 'open_ended' && (
+      {ans.submitted && (q.type === 'open_ended' || q.type?.toLowerCase() === 'open') && (
         <div>
           {evaluating && (
-            <div className="flex items-center gap-2 text-sm text-on-surface-variant">
-              <div className="w-4 h-4 border-2 border-primary border-t-transparent rounded-full animate-spin" />
-              Evaluating your answer...
+            <div className="p-6 rounded-xl bg-primary/5 border border-primary/20">
+              <div className="flex flex-col items-center gap-3">
+                <div className="flex gap-1">
+                  <div className="w-3 h-3 bg-primary rounded-full animate-bounce" style={{ animationDelay: '0s' }} />
+                  <div className="w-3 h-3 bg-primary rounded-full animate-bounce" style={{ animationDelay: '0.2s' }} />
+                  <div className="w-3 h-3 bg-primary rounded-full animate-bounce" style={{ animationDelay: '0.4s' }} />
+                </div>
+                <p className="text-sm font-medium text-on-surface">AI is evaluating your answer...</p>
+                <p className="text-xs text-on-surface-variant">This may take a few seconds</p>
+              </div>
             </div>
           )}
           {ans.evalResult && (
@@ -60,7 +68,7 @@ export function QuizQuestionView({ q, ans, currentIndex, isLast, evaluating, onS
         </div>
       )}
 
-      {ans.submitted && q.type !== 'open_ended' && (
+      {ans.submitted && q.type !== 'open_ended' && q.type?.toLowerCase() !== 'open' && (
         <div className="flex items-center gap-2 text-sm text-primary font-medium">
           <CheckCircle className="w-4 h-4" />
           Answer recorded.

@@ -41,7 +41,7 @@ public class Question {
     private String text;
 
     @Column(nullable = false)
-    @jakarta.persistence.Enumerated(jakarta.persistence.EnumType.STRING)
+    @jakarta.persistence.Convert(converter = QuestionTypeConverter.class)
     private QuestionType type;
 
     @OneToMany(mappedBy = "question", cascade = CascadeType.ALL, orphanRemoval = true)

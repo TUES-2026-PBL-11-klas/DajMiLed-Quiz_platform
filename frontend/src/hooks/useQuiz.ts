@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { formService, FullFormResponse, Question } from '@/services/formService';
+import { submissionService, SubmissionResult } from '@/services/submissionService';
 import { AnswerState, evaluateAnswer } from '@/types/quiz';
 
 export function useQuiz(id: string) {
@@ -12,19 +13,20 @@ export function useQuiz(id: string) {
   const [answers, setAnswers] = useState<Record<number, AnswerState>>({});
   const [evaluating, setEvaluating] = useState(false);
   const [allDone, setAllDone] = useState(false);
+  const [submissionResult, setSubmissionResult] = useState<SubmissionResult | null>(null);
 
   useEffect(() => {
     void (async () => {
       const formId = parseInt(id, 10);
-      if (isNaN(formId)) {
-        setError('Invalid quiz ID.');
-        setLoading(false);
-        return;
-      }
+      if (isNaN(formId)) { setError('Invalid quiz ID.'); setLoading(false); return; }
       try {
         const res = await formService.getFormById(formId);
+        console.log('Quiz loaded:', res);
+        console.log('Form data:', res.data);
+        console.log('Questions:', res.data?.questions);
         setForm(res.data);
-      } catch {
+      } catch (err) {
+        console.error('Error loading quiz:', err);
         setError('Quiz not found or server is unavailable.');
       } finally {
         setLoading(false);
@@ -41,7 +43,10 @@ export function useQuiz(id: string) {
 
   const handleSubmitQuestion = async (q: Question) => {
     const ans = getAnswer(q.id);
-    if (q.type === 'open_ended') {
+    const normalizedType = q.type?.toLowerCase() ?? '';
+    const isOpenEnded = normalizedType === 'open_ended' || normalizedType === 'open';
+
+    if (isOpenEnded) {
       if (!ans.openText.trim()) return;
       setEvaluating(true);
       const result = await evaluateAnswer(q.text, ans.openText);
@@ -52,12 +57,39 @@ export function useQuiz(id: string) {
     }
   };
 
+  const submitQuiz = async (formId: number, questions: Question[]) => {
+    const answersList = questions.flatMap((q) => {
+      const ans = getAnswer(q.id);
+      const normalizedType = q.type?.toLowerCase() ?? '';
+
+      if (normalizedType === 'open_ended' || normalizedType === 'open') {
+        return ans.openText.trim() ? [{ questionId: q.id, answerText: ans.openText.trim() }] : [];
+      }
+      if (normalizedType === 'multiple_answer') {
+        return ans.multiChoice.length > 0 ? ans.multiChoice.map((cId) => ({ questionId: q.id, selectedChoiceId: parseInt(cId) })) : [];
+      }
+      return ans.singleChoice ? [{ questionId: q.id, selectedChoiceId: parseInt(ans.singleChoice) }] : [];
+    });
+    try {
+      if (answersList.length === 0) {
+        console.warn('No answers provided for submission');
+      }
+      const res = await submissionService.submit({ formId, answers: answersList });
+      setSubmissionResult(res.data);
+    } catch (e: unknown) {
+      console.error('Submission error:', e);
+      // Submission is best-effort - allow users to see results even if submission fails
+    }
+    setAllDone(true);
+  };
+
   return {
     form, loading, error,
     currentIndex, setCurrentIndex,
     answers, setAnswers,
     evaluating, allDone, setAllDone,
+    submissionResult,
     getAnswer, setAnswer,
-    handleSubmitQuestion,
+    handleSubmitQuestion, submitQuiz,
   };
 }

@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation';
 import { NavBar } from '@/components/NavBar';
 import { formService, FormResponse } from '@/services/formService';
 import { useAuth } from '@/hooks/useAuth';
-import { PlusCircle, ExternalLink, ClipboardList } from 'lucide-react';
+import { PlusCircle, ExternalLink, ClipboardList, Sparkles, CheckSquare } from 'lucide-react';
 
 export default function MyFormsPage() {
   const router = useRouter();
@@ -51,13 +51,16 @@ export default function MyFormsPage() {
             <h1 className="font-display font-extrabold text-3xl mb-1">My Quizzes</h1>
             <p className="text-on-surface-variant">Quizzes you&apos;ve created</p>
           </div>
-          <Link
-            href="/forms/create"
-            className="flex items-center gap-2 px-5 py-2.5 rounded-full primary-gradient text-on-primary font-bold text-sm shadow-md hover:scale-[1.02] active:scale-[0.98] transition-all"
-          >
-            <PlusCircle className="w-4 h-4" />
-            New Quiz
-          </Link>
+          <div className="flex gap-2">
+            <Link href="/forms/ai-generate" className="flex items-center gap-2 px-5 py-2.5 rounded-full bg-surface-container border border-outline-variant/30 text-on-surface font-bold text-sm hover:bg-surface-container-high transition-colors">
+              <Sparkles className="w-4 h-4" />
+              AI Generate
+            </Link>
+            <Link href="/forms/create" className="flex items-center gap-2 px-5 py-2.5 rounded-full primary-gradient text-on-primary font-bold text-sm shadow-md hover:scale-[1.02] active:scale-[0.98] transition-all">
+              <PlusCircle className="w-4 h-4" />
+              New Quiz
+            </Link>
+          </div>
         </div>
 
         {loading && (
@@ -107,13 +110,14 @@ export default function MyFormsPage() {
                     {form.title}
                   </h2>
                   <p className="text-xs text-on-surface-variant mb-4">ID: {form.id}</p>
-                  <div className="flex gap-2">
-                    <Link
-                      href={`/quiz/${form.id}`}
-                      className="flex items-center gap-1.5 px-4 py-2 rounded-full bg-primary-container text-on-primary-container text-xs font-bold hover:opacity-80 transition-opacity"
-                    >
+                  <div className="flex gap-2 flex-wrap">
+                    <Link href={`/quiz/${form.id}`} className="flex items-center gap-1.5 px-4 py-2 rounded-full bg-primary-container text-on-primary-container text-xs font-bold hover:opacity-80 transition-opacity">
                       <ExternalLink className="w-3.5 h-3.5" />
                       Take Quiz
+                    </Link>
+                    <Link href={`/forms/${form.id}/answers`} className="flex items-center gap-1.5 px-4 py-2 rounded-full bg-surface-container-high border border-outline-variant/30 text-on-surface text-xs font-bold hover:opacity-80 transition-opacity">
+                      <CheckSquare className="w-3.5 h-3.5" />
+                      Set Answers
                     </Link>
                   </div>
                 </div>

@@ -19,8 +19,8 @@ export async function evaluateAnswer(question: string, answer: string): Promise<
     const res = await fetch(`${EVAL_URL}/evaluate`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ context: '', question, answer }),
-      signal: AbortSignal.timeout(5000),
+      body: JSON.stringify({ context: '', question, answer, question_type: 'open' }),
+      signal: AbortSignal.timeout(10000),
     });
     if (!res.ok) return null;
     return await res.json();
