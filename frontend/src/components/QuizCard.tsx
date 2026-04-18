@@ -17,8 +17,11 @@ export function QuizCard({
   className = '',
 }: QuizCardProps) {
   const variants: ('primary' | 'secondary' | 'tertiary')[] = ['primary', 'secondary', 'tertiary'];
+
   const numericId = typeof id === 'number' ? id : (id.length || 0);
-  const colorVariant = variants[numericId % variants.length];
+  const seed = numericId * 9301 + 49297;
+  const randomIndex = Math.abs(Math.sin(seed) * 10000) % variants.length;
+  const colorVariant = variants[Math.floor(randomIndex)];
 
   const colorStyles = {
     primary: {
@@ -50,7 +53,8 @@ export function QuizCard({
   const style = colorStyles[colorVariant] || colorStyles.primary;
 
   return (
-    <div
+    <Link
+      href={`/quiz/${id}`}
       className={`group relative overflow-hidden rounded-2xl ${style.bg} border border-outline-variant/10 transition-transform duration-700 hover:scale-[1.02] cursor-pointer shadow-lg ${style.shadow} flex flex-col justify-end p-8 min-h-[220px] ${className}`}
     >
       <div className="absolute inset-0 bg-scholarly-texture opacity-10 mix-blend-multiply pointer-events-none" />
@@ -85,14 +89,13 @@ export function QuizCard({
               </p>
             )}
           </div>
-          <Link
-            href={`/quiz/${id}`}
+          <button
             className={`px-6 py-2.5 rounded-full font-bold shadow-md active:scale-95 transition-all text-sm ${style.button}`}
           >
             Start
-          </Link>
+          </button>
         </div>
       </div>
-    </div>
+    </Link>
   );
 }

@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useRef, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { NavBar } from '@/components/NavBar';
 import { Button } from '@/components/Button';
@@ -18,13 +18,16 @@ interface Props {
 
 export function QuizResults({ form, getAnswer, submissionResult, onRetake }: Props) {
   const router = useRouter();
-  const [mounted, setMounted] = useState(false);
+  const isMountedRef = useRef(false);
+  const [mounted, setMounted] = React.useState(false);
 
   useEffect(() => {
+    isMountedRef.current = true;
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setMounted(true);
   }, []);
 
-  if (!mounted) {
+  if (!mounted && typeof window !== 'undefined') {
     return (
       <div className="min-h-screen bg-background">
         <NavBar />
