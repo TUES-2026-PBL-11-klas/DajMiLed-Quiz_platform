@@ -42,7 +42,8 @@ class CorrectAnswerServiceImplTest {
 
     @BeforeEach
     void setUp() {
-        question = new Question(new Form("Test Form", 1L, "Context"), "Q1", "closed");
+        question = new Question(new Form("Test Form", 1L, "Context"), "Q1",
+                com.formus.server.models.QuestionType.CLOSED);
         ReflectionTestUtils.setField(question, "id", 1L);
 
         choice = new Choice(question, "Option A");
@@ -105,7 +106,8 @@ class CorrectAnswerServiceImplTest {
 
     @Test
     void assignCorrectAnswer_ChoiceNotBelongingToQuestion() {
-        Question otherQuestion = new Question(new Form("Test Form", 1L, "Context"), "Q2", "closed");
+        Question otherQuestion = new Question(new Form("Test Form", 1L, "Context"), "Q2",
+                com.formus.server.models.QuestionType.CLOSED);
         ReflectionTestUtils.setField(otherQuestion, "id", 2L);
         Choice otherChoice = new Choice(otherQuestion, "Option B");
         ReflectionTestUtils.setField(otherChoice, "id", 3L);

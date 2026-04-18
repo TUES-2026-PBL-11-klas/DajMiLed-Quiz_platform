@@ -18,6 +18,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebMvcTest(controllers = CorrectAnswerController.class)
 @AutoConfigureMockMvc(addFilters = false)
+@org.springframework.test.context.ActiveProfiles("test")
 class CorrectAnswerControllerTest {
 
     @Autowired

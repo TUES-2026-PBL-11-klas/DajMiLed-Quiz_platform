@@ -41,13 +41,14 @@ public class Question {
     private String text;
 
     @Column(nullable = false)
-    private String type;
+    @jakarta.persistence.Enumerated(jakarta.persistence.EnumType.STRING)
+    private QuestionType type;
 
     @OneToMany(mappedBy = "question", cascade = CascadeType.ALL, orphanRemoval = true)
     @BatchSize(size = 100)
     private List<Choice> choices = new ArrayList<>();
 
-    public Question(Form form, String text, String type) {
+    public Question(Form form, String text, QuestionType type) {
         this.form = form;
         this.text = text;
         this.type = type;

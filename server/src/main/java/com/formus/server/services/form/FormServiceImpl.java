@@ -59,7 +59,7 @@ public class FormServiceImpl implements FormService {
                     new QuestionResponse(
                             question.getId(),
                             question.getText(),
-                            question.getType(),
+                            question.getType().getValue(),
                             choiceResponses));
         }
 

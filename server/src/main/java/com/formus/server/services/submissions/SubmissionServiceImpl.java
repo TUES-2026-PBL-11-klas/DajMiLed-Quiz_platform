@@ -10,6 +10,7 @@ import com.formus.server.models.Answer;
 import com.formus.server.models.CorrectAnswer;
 import com.formus.server.models.Form;
 import com.formus.server.models.Question;
+import com.formus.server.models.QuestionType;
 import com.formus.server.models.Submission;
 import com.formus.server.models.User;
 import com.formus.server.repositories.CorrectAnswerRepository;
@@ -66,6 +67,13 @@ public class SubmissionServiceImpl implements SubmissionService {
                 Map<Long, Question> questionMap = form.getQuestions().stream()
                                 .collect(Collectors.toMap(Question::getId, Function.identity()));
 
+                List<Long> questionIds = request.getAnswers().stream()
+                                .map(AnswerRequest::getQuestionId).collect(Collectors.toList());
+
+                Map<Long, CorrectAnswer> correctAnswerMap = correctAnswerRepository.findByQuestionIdIn(questionIds)
+                                .stream()
+                                .collect(Collectors.toMap(ca -> ca.getQuestion().getId(), Function.identity()));
+
                 Submission submission = new Submission(form, user);
 
                 float totalScore = 0f;
@@ -80,17 +88,18 @@ public class SubmissionServiceImpl implements SubmissionService {
                                                                 + " for form: " + form.getId());
                         }
 
-                        String type = question.getType();
-                        boolean isClosedType = "closed".equalsIgnoreCase(type);
+                        QuestionType type = question.getType();
+                        boolean isClosedType = type == QuestionType.CLOSED;
 
                         EvaluationResponseDTO evalRes;
 
                         if (isClosedType) {
-                                CorrectAnswer correctAnswer = correctAnswerRepository
-                                                .findByQuestionId(question.getId())
-                                                .orElseThrow(() -> new ResourceNotFoundException(
-                                                                "Correct answer not found for question: "
-                                                                                + question.getId()));
+                                CorrectAnswer correctAnswer = correctAnswerMap.get(question.getId());
+                                if (correctAnswer == null) {
+                                        throw new ResourceNotFoundException(
+                                                        "Correct answer not found for question: "
+                                                                        + question.getId());
+                                }
 
                                 Long correctChoiceId = correctAnswer.getChoice().getId();
                                 Long selectedChoiceId = answerRequest.getSelectedChoiceId();
@@ -125,7 +134,7 @@ public class SubmissionServiceImpl implements SubmissionService {
                                                 .context(form.getContext() != null ? form.getContext() : "")
                                                 .question(question.getText())
                                                 .answer(userAnswerText)
-                                                .questionType(question.getType())
+                                                .questionType(question.getType().getValue())
                                                 .build();
 
                                 evalRes = evaluationService.evaluateAnswer(evalReq);

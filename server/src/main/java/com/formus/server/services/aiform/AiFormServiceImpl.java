@@ -10,6 +10,7 @@ import com.formus.server.jwt.JwtProvider;
 import com.formus.server.models.Choice;
 import com.formus.server.models.Form;
 import com.formus.server.models.Question;
+import com.formus.server.models.QuestionType;
 import com.formus.server.models.CorrectAnswer;
 import com.formus.server.repositories.CorrectAnswerRepository;
 import com.formus.server.repositories.FormRepository;
@@ -17,6 +18,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import java.util.List;
+import java.util.ArrayList;
 
 @Service
 @RequiredArgsConstructor
@@ -48,10 +51,10 @@ public class AiFormServiceImpl implements AiFormService {
 
         if (aiResponse.getQuestions() != null && !aiResponse.getQuestions().isEmpty()) {
             for (AiQuestion aiQuestion : aiResponse.getQuestions()) {
-                String type = determineQuestionType(aiQuestion);
+                QuestionType type = determineQuestionType(aiQuestion);
                 Question question = new Question(form, aiQuestion.getQuestionText(), type);
 
-                if ("closed".equals(type) && aiQuestion.getOptions() != null) {
+                if (type == QuestionType.CLOSED && aiQuestion.getOptions() != null) {
                     for (String optionText : aiQuestion.getOptions()) {
                         Choice choice = new Choice(question, optionText);
                         question.addChoice(choice);
@@ -62,11 +65,13 @@ public class AiFormServiceImpl implements AiFormService {
         }
 
         Form savedForm = formRepository.save(form);
+        List<CorrectAnswer> correctAnswersToSave = new ArrayList<>();
+
         for (int i = 0; i < aiResponse.getQuestions().size(); i++) {
             AiQuestion aiq = aiResponse.getQuestions().get(i);
             Question savedQuestion = savedForm.getQuestions().get(i);
 
-            if (!"closed".equals(savedQuestion.getType())) {
+            if (savedQuestion.getType() != QuestionType.CLOSED) {
                 continue;
             }
 
@@ -79,9 +84,13 @@ public class AiFormServiceImpl implements AiFormService {
                     .filter(c -> c.getText().equalsIgnoreCase(aiq.getCorrectAnswer()))
                     .findFirst()
                     .ifPresentOrElse(
-                            choice -> correctAnswerRepository.save(new CorrectAnswer(savedQuestion, choice)),
+                            choice -> correctAnswersToSave.add(new CorrectAnswer(savedQuestion, choice)),
                             () -> log.warn("Correct answer '{}' not found in choices for question {}",
                                     aiq.getCorrectAnswer(), savedQuestion.getId()));
+        }
+
+        if (!correctAnswersToSave.isEmpty()) {
+            correctAnswerRepository.saveAll(correctAnswersToSave);
         }
 
         log.info("Successfully created AI form ID: {}", savedForm.getId());
@@ -89,10 +98,10 @@ public class AiFormServiceImpl implements AiFormService {
         return new AiFormResponse(savedForm.getId(), savedForm.getTitle());
     }
 
-    private String determineQuestionType(AiQuestion aiQuestion) {
+    private QuestionType determineQuestionType(AiQuestion aiQuestion) {
         if (aiQuestion.getOptions() == null || aiQuestion.getOptions().isEmpty()) {
-            return "open";
+            return QuestionType.OPEN;
         }
-        return "closed";
+        return QuestionType.CLOSED;
     }
 }

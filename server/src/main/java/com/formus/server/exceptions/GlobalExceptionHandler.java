@@ -66,6 +66,15 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
     }
 
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<ApiResponse> handleIllegalArgument(IllegalArgumentException ex) {
+        ApiResponse response = new ApiResponse(
+                HttpStatus.BAD_REQUEST.value(),
+                ex.getMessage(),
+                null);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+    }
+
     @ExceptionHandler(AiServiceException.class)
     public ResponseEntity<ApiResponse> handleAiServiceException(AiServiceException ex) {
         log.error("AI Service Error: {}", ex.getMessage());

@@ -23,7 +23,8 @@ public class QuestionServiceImpl implements QuestionService {
         Form form = formRepository.findById(request.getFormId())
                 .orElseThrow(() -> new ResourceNotFoundException("Form not found with id: " + request.getFormId()));
 
-        Question question = new Question(form, request.getText(), request.getType());
+        Question question = new Question(form, request.getText(),
+                com.formus.server.models.QuestionType.fromString(request.getType()));
         return questionRepository.save(question);
     }
 }

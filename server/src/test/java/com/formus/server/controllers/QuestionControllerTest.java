@@ -72,7 +72,7 @@ class QuestionControllerTest {
 
     @Test
     void createQuestion_validRequest_returnsCreated() throws Exception {
-        Question question = new Question(null, "Question?", "OPEN");
+        Question question = new Question(null, "Question?", com.formus.server.models.QuestionType.OPEN);
         ReflectionTestUtils.setField(question, "id", 1L);
 
         when(questionService.createQuestion(any())).thenReturn(question);

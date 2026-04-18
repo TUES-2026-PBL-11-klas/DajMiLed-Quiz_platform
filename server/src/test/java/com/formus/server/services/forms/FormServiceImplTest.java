@@ -97,7 +97,7 @@ class FormServiceImplTest {
         Form form = new Form("Form", 1L, "This is a sufficiently long context for validation");
         ReflectionTestUtils.setField(form, "id", 1L);
 
-        Question question = new Question(form, "Q1", "CLOSED");
+        Question question = new Question(form, "Q1", com.formus.server.models.QuestionType.CLOSED);
         ReflectionTestUtils.setField(question, "id", 10L);
         form.addQuestion(question);
 

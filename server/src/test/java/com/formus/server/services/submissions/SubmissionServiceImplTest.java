@@ -69,10 +69,10 @@ class SubmissionServiceImplTest {
         testForm = new Form("Test Form", 1L, "Context");
         ReflectionTestUtils.setField(testForm, "id", 1L);
 
-        openQuestion = new Question(testForm, "What is Spring?", "open");
+        openQuestion = new Question(testForm, "What is Spring?", com.formus.server.models.QuestionType.OPEN);
         ReflectionTestUtils.setField(openQuestion, "id", 101L);
 
-        closedQuestion = new Question(testForm, "Is Java OOP?", "closed");
+        closedQuestion = new Question(testForm, "Is Java OOP?", com.formus.server.models.QuestionType.CLOSED);
         ReflectionTestUtils.setField(closedQuestion, "id", 102L);
 
         Choice c1 = new Choice(closedQuestion, "Yes");
@@ -102,8 +102,8 @@ class SubmissionServiceImplTest {
         var correctAnswer = new com.formus.server.models.CorrectAnswer(closedQuestion, correctChoice);
         ReflectionTestUtils.setField(correctAnswer, "id", 301L);
 
-        when(correctAnswerRepository.findByQuestionId(102L))
-                .thenReturn(Optional.of(correctAnswer));
+        when(correctAnswerRepository.findByQuestionIdIn(anyList()))
+                .thenReturn(List.of(correctAnswer));
 
         when(evaluationService.evaluateAnswer(any(EvaluationRequestDTO.class)))
                 .thenReturn(new EvaluationResponseDTO(0.8f, "Good", true));
