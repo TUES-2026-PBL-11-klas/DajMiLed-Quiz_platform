@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState } from 'react';
 import { NavBar } from '@/components/NavBar';
 import { QuizCard } from '@/components/QuizCard';
 import { formService, FormResponse } from '@/services/formService';
@@ -13,7 +13,7 @@ export default function DashboardPage() {
   const [page, setPage] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
 
-  const loadForms = useCallback(async (p: number) => {
+  const handleLoadForms = async (p: number) => {
     setLoading(true);
     setError('');
     try {
@@ -25,11 +25,12 @@ export default function DashboardPage() {
     } finally {
       setLoading(false);
     }
-  }, []);
+  };
 
   useEffect(() => {
-    loadForms(page);
-  }, [loadForms, page]);
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    handleLoadForms(page);
+  }, [page]);
 
   const filtered = forms.filter((f) =>
     f.title.toLowerCase().includes(search.toLowerCase())
@@ -60,7 +61,7 @@ export default function DashboardPage() {
             <div className="text-center py-24">
               <p className="text-error font-semibold mb-2">{error}</p>
               <button
-                onClick={() => loadForms(page)}
+                onClick={() => handleLoadForms(page)}
                 className="mt-4 px-6 py-2.5 rounded-full bg-primary-container text-on-primary-container font-bold text-sm hover:opacity-80 transition-opacity"
               >
                 Retry

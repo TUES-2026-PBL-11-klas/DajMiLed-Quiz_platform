@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useRef } from 'react';
 
 export interface OpenEndedQuestionProps {
   question: string;
@@ -15,16 +15,10 @@ export const OpenEndedQuestion: React.FC<OpenEndedQuestionProps> = ({
   placeholder = "Type your thoughtful response here...",
   onChange,
 }) => {
-  const [text, setText] = useState<string>(value);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
-
-  useEffect(() => {
-    setText(value);
-  }, [value]);
 
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const val = e.target.value;
-    setText(val);
     onChange?.(val);
   };
 
@@ -35,9 +29,9 @@ export const OpenEndedQuestion: React.FC<OpenEndedQuestionProps> = ({
       </h2>
       
       <div className="relative group w-full">
-        <textarea 
+        <textarea
           ref={textareaRef}
-          value={text}
+          value={value}
           onChange={handleChange}
           className="w-full p-6 bg-surface-container-low border-none rounded-xl 
                      focus:ring-2 focus:ring-primary/40 focus:outline-none 
