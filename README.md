@@ -188,29 +188,47 @@ uvicorn app.main:app --reload --port 8001
 
 | Method | Endpoint | Description | Auth |
 |---|---|---|---|
-| `POST` | `/api/auth/register` | Register a new user | No |
-| `POST` | `/api/auth/login` | Login and receive JWT | No |
+| `POST` | `/api/auth/register` | Register a new user account | No |
+| `POST` | `/api/auth/login` | Login and receive JWT token | No |
 
 #### Forms
 
 | Method | Endpoint | Description | Auth |
 |---|---|---|---|
-| `POST` | `/api/forms` | Create a new form | JWT |
-| `GET` | `/api/forms` | List all forms (paginated) | No |
-| `GET` | `/api/forms/{id}` | Get a single form | No |
-| `GET` | `/api/forms/me` | Get the current user's forms | JWT |
+| `POST` | `/api/forms` | Create a new quiz form | JWT |
+| `GET` | `/api/forms` | List all public forms (paginated) | No |
+| `GET` | `/api/forms/{id}` | Get a single form with questions and choices | No |
+| `GET` | `/api/forms/me` | Get the current user's created forms (paginated) | JWT |
 
 #### Questions
 
 | Method | Endpoint | Description | Auth |
 |---|---|---|---|
-| `POST` | `/api/questions` | Create a question | No |
+| `POST` | `/api/questions` | Create a question within a form | No |
 
 #### Choices
 
 | Method | Endpoint | Description | Auth |
 |---|---|---|---|
-| `POST` | `/api/choices` | Create answer choices | No |
+| `POST` | `/api/choices` | Create answer choices for a question | No |
+
+#### Correct Answers
+
+| Method | Endpoint | Description | Auth |
+|---|---|---|---|
+| `POST` | `/api/correct-answers` | Assign a correct answer to a question | No |
+
+#### Submissions
+
+| Method | Endpoint | Description | Auth |
+|---|---|---|---|
+| `POST` | `/api/submissions` | Submit a form/quiz with user answers | JWT |
+
+#### AI Form Generation
+
+| Method | Endpoint | Description | Auth |
+|---|---|---|---|
+| `POST` | `/api/ai-form` | Generate quiz form with AI-powered questions from context | JWT |
 
 ---
 
