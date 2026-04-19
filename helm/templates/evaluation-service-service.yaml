@@ -1,0 +1,13 @@
+{{- if .Values.evaluationService.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}-evaluation-service
+spec:
+  selector:
+    app: {{ .Release.Name }}-evaluation-service
+  ports:
+    - port: 80
+      targetPort: 8000
+  type: ClusterIP
+{{- end }}

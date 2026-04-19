@@ -34,9 +34,9 @@ sleep 3
 echo "[2/3] Creating vault-auth secret..."
 kubectl create secret generic vault-auth \
   --from-literal=VAULT_TOKEN="${VAULT_TOKEN}" \
-  --namespace default \
-  2>/dev/null || kubectl patch secret vault-auth \
-  -p "{\"stringData\":{\"VAULT_TOKEN\":\"${VAULT_TOKEN}\"}}"
+  --from-literal=HF_TOKEN="${HF_TOKEN}" \
+  --from-literal=HF_MODEL_ID="${HF_MODEL_ID}" \
+  --namespace default
 
 # ── Apply Helm chart ──────────────────────────────────────────────────────────
 echo "[3/3] Applying Helm chart..."

@@ -12,7 +12,7 @@ export interface AnswerState {
   submitted: boolean;
 }
 
-export const EVAL_URL = 'http://localhost:8000';
+export const EVAL_URL = 'http://quiz-server-evaluation-service';
 
 export async function evaluateAnswer(question: string, answer: string): Promise<EvalResult | null> {
   try {

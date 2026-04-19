@@ -1,0 +1,42 @@
+{{- if .Values.questionGenerationService.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-question-generation-service
+  labels:
+    app: {{ .Release.Name }}-question-generation-service
+spec:
+  replicas: {{ .Values.questionGenerationService.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}-question-generation-service
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}-question-generation-service
+    spec:
+      containers:
+        - name: question-generation-service
+          image: "{{ .Values.questionGenerationService.image.repository }}:{{ .Values.questionGenerationService.image.tag }}"
+          imagePullPolicy: {{ .Values.questionGenerationService.image.pullPolicy }}
+          ports:
+            - containerPort: 8000
+          env:
+            - name: HF_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: vault-auth
+                  key: HF_TOKEN
+            - name: HF_MODEL_ID
+              valueFrom:
+                secretKeyRef:
+                  name: vault-auth
+                  key: HF_MODEL_ID
+          resources:
+            requests:
+              memory: {{ .Values.questionGenerationService.resources.requests.memory }}
+              cpu: {{ .Values.questionGenerationService.resources.requests.cpu }}
+            limits:
+              memory: {{ .Values.questionGenerationService.resources.limits.memory }}
+              cpu: {{ .Values.questionGenerationService.resources.limits.cpu }}
+{{- end }}

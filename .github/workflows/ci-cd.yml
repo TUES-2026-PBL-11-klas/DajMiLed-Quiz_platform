@@ -96,8 +96,36 @@ jobs:
       tag: ${{ github.sha }}
       context: ./frontend
 
+  docker-evaluation-service:
+    needs: [test, lint-frontend]
+    if: |
+      (github.ref == 'refs/heads/main' && github.event_name == 'push') ||
+      github.event_name == 'workflow_dispatch'
+    uses: ./.github/workflows/build-and-push.yml
+    secrets:
+      DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+      DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+    with:
+      image-name: quiz-evaluation-service
+      tag: ${{ github.sha }}
+      context: ./evaluation-service
+
+  docker-question-generation-service:
+    needs: [test, lint-frontend]
+    if: |
+      (github.ref == 'refs/heads/main' && github.event_name == 'push') ||
+      github.event_name == 'workflow_dispatch'
+    uses: ./.github/workflows/build-and-push.yml
+    secrets:
+      DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+      DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+    with:
+      image-name: quiz-question-generation-service
+      tag: ${{ github.sha }}
+      context: ./question-generation-service
+
   deploy:
-    needs: [docker, docker-frontend]
+    needs: [docker, docker-frontend, docker-evaluation-service, docker-question-generation-service]
     if: |
       (github.ref == 'refs/heads/main' && github.event_name == 'push') ||
       github.event_name == 'workflow_dispatch'

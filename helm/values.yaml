@@ -1,7 +1,7 @@
 image:
   repository: dajmiled/quiz-server
   tag: latest
-  pullPolicy: IfNotPresent
+  pullPolicy: Always
 
 replicaCount: 1
 
@@ -27,13 +27,34 @@ frontend:
   image:
     repository: dajmiled/quiz-frontend
     tag: latest
-    pullPolicy: IfNotPresent
+    pullPolicy: Always
 
-postgresql:
-  auth:
-    username: ""  
-    password: ""    
-    database: ""  
-  persistence:
-    size: 1Gi
+evaluationService:
+  enabled: true
+  replicaCount: 1
+  image:
+    repository: dajmiled/quiz-evaluation-service
+    tag: latest
+    pullPolicy: Always
+  resources:
+    requests:
+      memory: "128Mi"
+      cpu: "100m"
+    limits:
+      memory: "256Mi"
+      cpu: "250m"
 
+questionGenerationService:
+  enabled: true
+  replicaCount: 1
+  image:
+    repository: dajmiled/quiz-question-generation-service
+    tag: latest
+    pullPolicy: Always
+  resources:
+    requests:
+      memory: "256Mi"
+      cpu: "250m"
+    limits:
+      memory: "1Gi"
+      cpu: "500m"

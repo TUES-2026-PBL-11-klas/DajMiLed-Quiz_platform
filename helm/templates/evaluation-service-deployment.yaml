@@ -1,0 +1,31 @@
+{{- if .Values.evaluationService.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-evaluation-service
+  labels:
+    app: {{ .Release.Name }}-evaluation-service
+spec:
+  replicas: {{ .Values.evaluationService.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}-evaluation-service
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}-evaluation-service
+    spec:
+      containers:
+        - name: evaluation-service
+          image: "{{ .Values.evaluationService.image.repository }}:{{ .Values.evaluationService.image.tag }}"
+          imagePullPolicy: {{ .Values.evaluationService.image.pullPolicy }}
+          ports:
+            - containerPort: 8000
+          resources:
+            requests:
+              memory: {{ .Values.evaluationService.resources.requests.memory }}
+              cpu: {{ .Values.evaluationService.resources.requests.cpu }}
+            limits:
+              memory: {{ .Values.evaluationService.resources.limits.memory }}
+              cpu: {{ .Values.evaluationService.resources.limits.cpu }}
+{{- end }}

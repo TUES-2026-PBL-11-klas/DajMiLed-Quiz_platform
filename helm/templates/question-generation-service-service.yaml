@@ -1,0 +1,13 @@
+{{- if .Values.questionGenerationService.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}-question-generation-service
+spec:
+  selector:
+    app: {{ .Release.Name }}-question-generation-service
+  ports:
+    - port: 80
+      targetPort: 8000
+  type: ClusterIP
+{{- end }}
