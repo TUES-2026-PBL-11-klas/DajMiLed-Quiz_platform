@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { formService, FullFormResponse, Question } from '@/services/formService';
-import { submissionService, SubmissionResult } from '@/services/submissionService';
+import { submissionService, SubmissionResult, type SubmissionRequest } from '@/services/submissionService';
 import { AnswerState, evaluateAnswer } from '@/types/quiz';
 
 export function useQuiz(id: string) {
@@ -58,23 +58,28 @@ export function useQuiz(id: string) {
   };
 
   const submitQuiz = async (formId: number, questions: Question[]) => {
-    const answersList = questions.flatMap((q) => {
+    const answers: SubmissionRequest['answers'] = [];
+    for (const q of questions) {
       const ans = getAnswer(q.id);
       const normalizedType = q.type?.toLowerCase() ?? '';
 
       if (normalizedType === 'open_ended' || normalizedType === 'open') {
-        return ans.openText.trim() ? [{ questionId: q.id, answerText: ans.openText.trim() }] : [];
+        if (ans.openText.trim()) {
+          answers.push({ questionId: q.id, answerText: ans.openText.trim() });
+        }
+      } else if (normalizedType === 'multiple_answer') {
+        for (const cId of ans.multiChoice) {
+          answers.push({ questionId: q.id, selectedChoiceId: parseInt(cId) });
+        }
+      } else if (ans.singleChoice) {
+        answers.push({ questionId: q.id, selectedChoiceId: parseInt(ans.singleChoice) });
       }
-      if (normalizedType === 'multiple_answer') {
-        return ans.multiChoice.length > 0 ? ans.multiChoice.map((cId) => ({ questionId: q.id, selectedChoiceId: parseInt(cId) })) : [];
-      }
-      return ans.singleChoice ? [{ questionId: q.id, selectedChoiceId: parseInt(ans.singleChoice) }] : [];
-    });
+    }
     try {
-      if (answersList.length === 0) {
+      if (answers.length === 0) {
         console.warn('No answers provided for submission');
       }
-      const res = await submissionService.submit({ formId, answers: answersList });
+      const res = await submissionService.submit({ formId, answers });
       setSubmissionResult(res.data);
     } catch (e: unknown) {
       console.error('Submission error:', e);

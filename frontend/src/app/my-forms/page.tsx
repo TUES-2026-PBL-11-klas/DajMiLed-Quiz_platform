@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { NavBar } from '@/components/NavBar';
@@ -17,7 +17,7 @@ export default function MyFormsPage() {
   const [page, setPage] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
 
-  const loadMyForms = useCallback(async (p: number) => {
+  const handleLoadMyForms = async (p: number) => {
     setLoading(true);
     setError('');
     try {
@@ -29,15 +29,16 @@ export default function MyFormsPage() {
     } finally {
       setLoading(false);
     }
-  }, []);
+  };
 
   useEffect(() => {
     if (!isLoggedIn) {
       router.push('/login');
       return;
     }
-    loadMyForms(page);
-  }, [isLoggedIn, loadMyForms, page, router]);
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    handleLoadMyForms(page);
+  }, [isLoggedIn, page, router]);
 
   if (!isLoggedIn) return null;
 
@@ -73,7 +74,7 @@ export default function MyFormsPage() {
           <div className="text-center py-24">
             <p className="text-error font-semibold mb-4">{error}</p>
             <button
-              onClick={() => loadMyForms(page)}
+              onClick={() => handleLoadMyForms(page)}
               className="px-6 py-2.5 rounded-full bg-primary-container text-on-primary-container font-bold text-sm hover:opacity-80 transition-opacity"
             >
               Retry

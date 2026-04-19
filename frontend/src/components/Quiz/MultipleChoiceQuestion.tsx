@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useRef } from 'react';
 
 export interface Option {
   id: string;
@@ -20,15 +20,10 @@ export const MultipleChoiceQuestion: React.FC<MultipleChoiceQuestionProps> = ({
   value,
   onChange,
 }) => {
-  const [selectedValue, setSelectedValue] = useState<string | undefined>(value);
   const containerRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    setSelectedValue(value);
-  }, [value]);
+  const selectedValue = value;
 
   const handleSelect = (id: string) => {
-    setSelectedValue(id);
     onChange?.(id);
   };
 
